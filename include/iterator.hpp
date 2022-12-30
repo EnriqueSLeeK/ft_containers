@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 19:53:12 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/26 15:38:35 by ensebast         ###   ########.fr       */
+/*   Updated: 2022/12/27 23:01:32 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ namespace ft {
     };
 
     struct random_access_iterator_tag {};
+    struct bidirectional_iterator_tag {};
 }
 
 
