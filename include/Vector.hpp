@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/22 16:37:42 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/27 21:57:40 by ensebast         ###   ########.fr       */
+/*   Updated: 2022/12/31 22:10:41 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ namespace ft {
              }
 
              size_type max_size(void) const {
-                 return (std::numeric_limits<difference_type>::max());
+                 return (std::numeric_limits<difference_type>::max() / sizeof(value_type));
              }
 
              void reserve (size_type new_cap) {
@@ -301,7 +301,7 @@ namespace ft {
              void pop_back( void ) {
                  if (_size == 0)
                      return ;
-                 erase(_data + _size - 1);
+                 erase(_data + (_size - 1));
              }
 
              void resize ( size_type count ) {
