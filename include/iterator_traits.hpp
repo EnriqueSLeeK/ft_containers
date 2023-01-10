@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/25 19:21:43 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/25 19:55:17 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/01 00:47:35 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ namespace ft {
         typedef const T&                        reference;
         typedef std::random_access_iterator_tag iterator_category;
     };
-
 }
 
 #endif

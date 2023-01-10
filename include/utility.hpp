@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 21:59:27 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/27 22:57:54 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/09 23:23:18 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace ft {
         template< class U1, class U2 >
         pair( const pair<U1, U2>& p ) : first(p.first), second(p.second) { }
 
-        pair( const pair& p ) {}
+        pair( const pair<T1, T2>& p ) : first(p.first), second(p.second) {}
 
         pair &operator=(const pair &other) {
             first = other.first;

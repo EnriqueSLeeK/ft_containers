@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 23:00:01 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/31 16:05:25 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/09 23:49:50 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,23 @@
 
 namespace ft {
 
-    template <typename T, typename Iterator >
-    class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T>{
+    template <typename T, typename Iterator>
+    class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, Iterator>{
 
         private:
-            typedef Iterator                                             iterator_type;
-            typedef typename ft::iterator_traits<T>::iterator_category   iterator_category;
-            typedef typename ft::iterator_traits<T>::value_type          value_type;
-            typedef typename ft::iterator_traits<T>::difference_type     difference_type;
-            typedef typename ft::iterator_traits<T>::pointer             pointer;
-            typedef typename ft::iterator_traits<T>::reference           reference;
+            typedef Iterator                                                    iterator_type;
+            typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
+            typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
+            typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
+            typedef typename ft::iterator_traits<Iterator>::pointer             pointer;
+            typedef typename ft::iterator_traits<Iterator>::reference           reference;
 
         private:
             pointer curr;
 
         public:
             tree_iterator (void) { }
-            tree_iterator( iterator_type x, iterator_type nil ) : curr(x){ }
+            tree_iterator( iterator_type x ) : curr(x){ }
             template< class U >
             tree_iterator( const tree_iterator<T, Iterator>& other ) : curr(other.base()) { }
 

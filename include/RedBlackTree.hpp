@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 16:10:49 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/31 21:51:46 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/10 00:10:14 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 #include <memory>
 #include <algorithm>
-#include "reverse_iterator.hpp"
 #include "utility.hpp"
 #include "tree_iterator.hpp"
+#include "reverse_iterator.hpp"
 
 
 namespace ft {
@@ -39,18 +39,7 @@ namespace ft {
             node (const value_type &val) : value(val), left(NULL), right(NULL), parent(NULL), color(RED) {}
     };
 
-    template <typename T>
-    bool operator== (const node<T> &first, const node<T> &other) {
-        return (first.value == other.value);
-    }
-
-    template <typename T>
-    bool operator< (const node<T> &first, const node<T> &other) {
-        return (first.value < other.value);
-    }
-
-
-    template < class n_type, class v_type, class Compare = std::less<n_type>, class Allocator = std::allocator< n_type > >
+    template < class n_type, class v_type, class Compare = std::less<v_type>, class Allocator = std::allocator< n_type > >
     class RedBlackTree {
         private:
             typedef v_type                                                  value_type;
@@ -74,30 +63,28 @@ namespace ft {
 
             size_type       _size;
 
-        public:
-            RedBlackTree (void) :
-                _allocator(allocator_type()),
-                _comp(compare_type()),
-                _size(0) {
-                    _root = NULL;
-            }
+            RedBlackTree (void) {}
 
-            RedBlackTree (Compare &comp,
+        public:
+
+            RedBlackTree (Compare comp,
                 const Allocator& alloc = Allocator()) :
                 _allocator(alloc),
                 _comp(comp),
-                _size(0) {
-                    _root = NULL;
-            }
+                _root(NULL),
+                _size(0) { }
 
             ~RedBlackTree (void) {
                 clean_up(_root);
-                destroy_node(NULL);
             }
 
             
             // Copy constructor
-            RedBlackTree (const RedBlackTree &tree) {
+            RedBlackTree (const RedBlackTree &tree) :
+                _root(NULL),
+                _size(tree._size),
+                _allocator(tree._allocator),
+                _comp(tree._comp){
                 *this = tree;
             }
             
@@ -121,6 +108,11 @@ namespace ft {
 
             node_pointer insert(const value_type &val) {
                 node_pointer new_node = create_node(val);
+                if (_root == NULL) {
+                    _root = new_node;
+                    _root->color = BLACK;
+                    return (_root);
+                }
                 node_pointer y = NULL;
                 node_pointer x = _root;
                 while (x != NULL) {
@@ -182,9 +174,10 @@ namespace ft {
             }
 
             node_pointer search (const value_type &val) {
+                value_type tmp = val;
                 node_pointer curr = _root;
-                while (curr != NULL || val.first != curr->first)
-                    curr = _comp(val, curr->value) ? curr -> right : curr -> left;
+                while (curr != NULL && val.first != curr->value.first)
+                    curr = _comp(tmp, curr->value) ? curr -> right : curr -> left;
                 return (curr);
             }
 

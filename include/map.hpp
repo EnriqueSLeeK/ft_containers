@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 22:29:47 by ensebast          #+#    #+#             */
-/*   Updated: 2022/12/31 23:00:33 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/09 23:48:52 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace ft {
         class Compare = std::less< Key >,
         class Allocator = std::allocator< std::pair< const Key, T > > >
         class map {
-        private:
+        public:
             typedef Key                                                     key_type;
             typedef T                                                       mapped_key;
             typedef ft::pair<const Key, T>                                  value_type;
@@ -72,17 +72,17 @@ namespace ft {
         public:
 
             //  Constructor ############################
-            map (void) : _tree(tree_type(value_compare())) { }
+            map (void) : _tree(value_compare(key_compare())) { }
 
             explicit map (Compare &comp,
                     const Allocator& alloc = Allocator()) :
-                _tree(tree_type(value_compare(), alloc)) { }
+                _tree(tree_type(value_compare(comp), alloc)) { }
 
             template< class InputIt >
             map( InputIt first, InputIt last,
                     const Compare& comp = Compare(),
                     const Allocator& alloc = Allocator() ) :
-                _tree(tree_type(value_compare(), alloc)) {
+                _tree(tree_type(value_compare(comp), alloc)) {
                 insert(first, last);
             }
 
@@ -96,6 +96,10 @@ namespace ft {
                 _tree = other._tree;
             }
             //  Copy assign end#########################
+
+            // Destructor ##############################
+            ~map  (void) { }
+            // Destructor end ##########################
             
             // Getter ##################################
             allocator_type getAllocator(void) const {
@@ -105,21 +109,21 @@ namespace ft {
 
             // Accessor ################################
             T& at( const Key& key ) {
-                node_pointer node = _tree.search(value_type(key));
+                node_pointer node = _tree.search(value_type(key), T());
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
             }
 
             const T& at(const Key& key) const {
-                node_pointer node = _tree.search(value_type(key));
+                node_pointer node = _tree.search(value_type(key), T());
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
             }
 
             T& operator[] ( const Key& key ) {
-                value_type val = value_type(key);
+                value_type val = value_type(key, T());
                 node_pointer node = _tree.search(val);
                 if (node == NULL)
                     return (_tree.insert(val)->value.second);
@@ -185,7 +189,7 @@ namespace ft {
             ft::pair<iterator, bool> insert ( const value_type& value ) {
                 ft::pair<iterator, bool> status = ft::pair<iterator, bool>();
                 status.second = false;
-                if (search(value) == NULL) {
+                if (_tree.search(value) == NULL) {
                     status.first = iterator(_tree.insert(value));
                     status.second = true;
                 }
@@ -204,7 +208,7 @@ namespace ft {
             }
 
             iterator erase( iterator pos ) {
-                node_pointer target_node = _tree.search(*pos);
+                node_pointer target_node = _tree.search(pos.base());
                 if (target_node != NULL)
                     _tree.delete_node(target_node);
                 return (pos);
@@ -217,7 +221,7 @@ namespace ft {
             }
 
             size_type erase( const Key& key ) {
-                node_pointer target = search(value_type(key));
+                node_pointer target = _tree.search(value_type(key));
                 if (target == NULL)
                     return (0);
                 _tree.delete_node(target);
