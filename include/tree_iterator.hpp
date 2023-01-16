@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 23:00:01 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/09 23:49:50 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/16 00:03:04 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,19 @@
 namespace ft {
 
     template <typename T, typename Iterator>
-    class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, Iterator>{
+    class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T>{
+
+        public:
+            typedef Iterator                                                        iterator_type;
+            typedef T*                                                              val_pointer;
+            typedef typename ft::iterator_traits<val_pointer>::pointer              pointer;
+            typedef typename ft::iterator_traits<val_pointer>::reference            reference;
+            typedef typename ft::iterator_traits<val_pointer>::value_type           value_type;
+            typedef typename ft::iterator_traits<val_pointer>::difference_type      difference_type;
+            typedef typename ft::iterator_traits<val_pointer>::iterator_category    iterator_category;
 
         private:
-            typedef Iterator                                                    iterator_type;
-            typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
-            typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
-            typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
-            typedef typename ft::iterator_traits<Iterator>::pointer             pointer;
-            typedef typename ft::iterator_traits<Iterator>::reference           reference;
-
-        private:
-            pointer curr;
+            iterator_type curr;
 
         public:
             tree_iterator (void) { }
@@ -49,7 +50,7 @@ namespace ft {
             }
 
             reference operator*() const {
-                return (curr -> value);
+                return ((*curr).value);
             }
 
             pointer operator->() const {
@@ -88,7 +89,7 @@ namespace ft {
 
         private:
 
-            pointer successor (pointer node) {
+            iterator_type successor (iterator_type node) {
                 if (node -> right != NULL) {
                     node = node -> right;
                     while (node -> left != NULL)
@@ -96,7 +97,7 @@ namespace ft {
                     return (node);
                 }
 
-                pointer y = node->parent;
+                iterator_type y = node->parent;
                 while (y != NULL && node == y->right) {
                     node = y;
                     y = y->parent;
@@ -104,7 +105,7 @@ namespace ft {
                 return (y);
             }
 
-            pointer predecessor (pointer node) {
+            iterator_type predecessor (iterator_type node) {
                 if (node -> left != NULL) {
                     node = node -> left;
                     while (node -> right != NULL)
@@ -112,7 +113,7 @@ namespace ft {
                     return (node);
                 }
 
-                pointer y = node->parent;
+                iterator_type y = node->parent;
                 while (y != NULL && node == y->left) {
                     node = y;
                     y = y->parent;

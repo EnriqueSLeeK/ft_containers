@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/28 16:10:49 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/10 00:10:14 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/15 17:37:46 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "tree_iterator.hpp"
 #include "reverse_iterator.hpp"
 
-
 namespace ft {
 
 # define RED false
@@ -27,19 +26,33 @@ namespace ft {
     
     template < class T >
     struct node {
-            typedef T   value_type;
 
-            value_type  value;
-            node        *left;
-            node        *right;
-            node        *parent;
-            bool        color;
+        typedef T   value_type;
 
-            node (void) : left(NULL), right(NULL), parent(NULL), color(RED) {}
-            node (const value_type &val) : value(val), left(NULL), right(NULL), parent(NULL), color(RED) {}
+        value_type  value;
+        const bool  end_node;
+        node        *left;
+        node        *right;
+        node        *parent;
+        bool        color;
+
+        node (const value_type &val) : value(val),
+                                        end_node(false),
+                                        left(NULL),
+                                        right(NULL),
+                                        parent(NULL),
+                                        color(RED) {}
+        node (void) : end_node(true),
+                        left(NULL),
+                        right(NULL),
+                        parent(NULL),
+                        color(BLACK) {}
     };
 
-    template < class n_type, class v_type, class Compare = std::less<v_type>, class Allocator = std::allocator< n_type > >
+    template < class n_type,
+             class v_type,
+             class Compare = std::less<v_type>,
+             class Allocator = std::allocator< n_type > >
     class RedBlackTree {
         private:
             typedef v_type                                                  value_type;
@@ -60,6 +73,7 @@ namespace ft {
             compare_type    _comp;
 
             node_pointer    _root;
+            node_type       _end;
 
             size_type       _size;
 
@@ -72,29 +86,29 @@ namespace ft {
                 _allocator(alloc),
                 _comp(comp),
                 _root(NULL),
+                _end(node_type()),
                 _size(0) { }
 
             ~RedBlackTree (void) {
                 clean_up(_root);
             }
-
             
             // Copy constructor
             RedBlackTree (const RedBlackTree &tree) :
-                _root(NULL),
-                _size(tree._size),
                 _allocator(tree._allocator),
-                _comp(tree._comp){
+                _comp(tree._comp),
+                _root(NULL),
+                _end(node_type()),
+                _size(tree._size) {
                 *this = tree;
             }
             
             RedBlackTree &operator=(const RedBlackTree &tree) {
-                if (_root != tree._root)
-                    clean_up(_root);
-                _root = tree._root;
-                _size = tree._size;
                 _allocator = tree._allocator;
                 _comp = tree._comp;
+                _root = tree._root;
+                _end = tree._end;
+                _size = tree._size;
                 return (*this);
             }
 
@@ -107,21 +121,17 @@ namespace ft {
             }
 
             node_pointer insert(const value_type &val) {
+
                 node_pointer new_node = create_node(val);
-                if (_root == NULL) {
-                    _root = new_node;
-                    _root->color = BLACK;
-                    return (_root);
-                }
+
                 node_pointer y = NULL;
-                node_pointer x = _root;
-                while (x != NULL) {
+
+                for (node_pointer x = _root;
+                        x != NULL && x->end_node == false;
+                        x = _comp(new_node->value, x->value) ? x->left : x->right) {
                     y = x;
-                    if (_comp(new_node->value, x->value))
-                        x = x -> left;
-                    else
-                        x = x -> right;
                 }
+
                 new_node->parent = y;
                 if (y == NULL)
                     _root = new_node;
@@ -129,17 +139,22 @@ namespace ft {
                     y->left = new_node;
                 else
                     y->right = new_node;
-                new_node->left = NULL;
-                new_node->right = NULL;
+
                 _size++;
+
+                // Fix tree rotating some sections if necessary
                 fixInsertRb(new_node);
+
                 return (new_node);
             }
 
             void delete_node (node_pointer target) {
-                node_pointer y = target;
                 node_pointer x = NULL;
+                node_pointer y = target;
                 bool y_original_color = y->color;
+                
+                if (target->right->end_node == true)
+                    target->right = NULL;
 
                 if (target->left == NULL) {
                     x = target->right;
@@ -176,7 +191,8 @@ namespace ft {
             node_pointer search (const value_type &val) {
                 value_type tmp = val;
                 node_pointer curr = _root;
-                while (curr != NULL && val.first != curr->value.first)
+                while (curr != NULL && curr->end_node == false
+                        && val.first != curr->value.first)
                     curr = _comp(tmp, curr->value) ? curr -> right : curr -> left;
                 return (curr);
             }
@@ -230,15 +246,20 @@ namespace ft {
                 _size = 0;
             }
 
-            node_pointer begin(void) {
-                return (minimum());
+            node_pointer begin (void) {
+                return (minimum(_root));
             }
 
-            node_pointer end(void) {
-                return (maximum());
+            node_pointer end (void) {
+                node_pointer max_elem = maximum(_root);
+                if (max_elem != NULL) {
+                    max_elem -> right = &_end;
+                    _end.parent = max_elem;
+                }
+                return (&_end);
             }
 
-            void swap( RedBlackTree &other) {
+            void swap (RedBlackTree &other) {
                 std::swap(_allocator, other._allocator);
                 std::swap(_comp, other._comp);
                 std::swap(_root, other._root);
@@ -258,6 +279,8 @@ namespace ft {
 
             // Node destruction
             void            destroy_node(node_pointer node_obj) {
+                if (node_obj -> end_node)
+                    return ;
                 _allocator.destroy(node_obj);
                 _allocator.deallocate(node_obj, 1);
             }
@@ -281,60 +304,72 @@ namespace ft {
             }
 
             void rotation_right (node_pointer ref_node) {
+
                 node_pointer y = ref_node->left;
+
                 ref_node->left = y->right;
+
                 if (y->right != NULL)
                     y->right->parent = ref_node;
                 y->parent = ref_node->parent;
+
                 if (ref_node->parent == NULL)
                     _root = y;
                 else if (ref_node == ref_node->parent->right)
                     ref_node->parent->right = y;
                 else
                     ref_node->parent->left = y;
+
                 y->right = ref_node;
                 ref_node->parent = y;
             }
 
             void fixInsertRb (node_pointer new_node) {
                 node_pointer y = NULL;
-                while (new_node->parent->color == RED) {
+
+                while (new_node->parent != NULL && new_node->parent->color == RED) {
+
                     if (new_node->parent == new_node->parent->parent->left) {
                         y = new_node->parent->parent->right;
-                        if (y->color == RED) {
+                        if (y != NULL && y->color == RED) {
                             new_node->parent->color = BLACK;
                             y->color = BLACK;
                             new_node->parent->parent->color = RED;
+                            new_node = new_node->parent->parent;
                         }
                         else if (new_node == new_node->parent->right) {
                             new_node = new_node->parent;
                             rotation_left(new_node);
-                            new_node->parent->color = BLACK;
-                            new_node->parent->parent->color = RED;
-                            rotation_right(new_node->parent->parent);
                         }
+                        new_node->parent->color = BLACK;
+                        new_node->parent->parent->color = RED;
+                        rotation_right(new_node->parent->parent);
                     }
+
                     else {
                         y = new_node->parent->parent->left;
-                        if (y->color == RED) {
+                        if (y != NULL && y->color == RED) {
                             new_node->parent->color = BLACK;
                             y->color = BLACK;
                             new_node->parent->parent->color = RED;
+                            new_node = new_node->parent->parent;
                         }
                         else if (new_node == new_node->parent->left) {
                             new_node = new_node->parent;
                             rotation_right(new_node);
-                            new_node->parent->color = BLACK;
-                            new_node->parent->parent->color = RED;
-                            rotation_left(new_node->parent->parent);
                         }
+                        new_node->parent->color = BLACK;
+                        new_node->parent->parent->color = RED;
+                        rotation_left(new_node->parent->parent);
                     }
+
                 }
+
                 _root->color = BLACK;
             }
 
             void clean_up (node_pointer curr) {
-                if (curr == NULL)
+                if (curr == NULL || curr->end_node)
                     return ;
                 clean_up(curr->left);
                 clean_up(curr->right);
@@ -362,14 +397,17 @@ namespace ft {
             node_pointer maximum (node_pointer relative_node) {
                 if (relative_node == NULL)
                     return (relative_node);
-                while (relative_node->right != NULL)
+                while (relative_node->right != NULL
+                        && !relative_node->right->end_node) {
                     relative_node = relative_node->right;
+                }
                 return (relative_node);
             }
 
             void deleteFix (node_pointer x) {
                 node_pointer w = NULL;
                 while (x != _root && x->color == BLACK) {
+
                     if (x == x->parent->left) {
                         w = x->parent->right;
                         if (w->color == RED) {
@@ -394,6 +432,7 @@ namespace ft {
                             x = _root;
                         }
                     }
+
                     else {
                         w = x->parent->left;
                         if (w->color == RED) {
@@ -418,6 +457,7 @@ namespace ft {
                             x = _root;
                         }
                     }
+
                     x->color = BLACK;
                 }
             }
