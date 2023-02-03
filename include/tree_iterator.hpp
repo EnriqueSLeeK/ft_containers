@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 23:00:01 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/16 00:03:04 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/01/28 14:17:53 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define BIDIRECTIONAL_ITERATOR_HPP
 
 #include "iterator.hpp"
+#include <iostream>
 #include "iterator_traits.hpp"
 
 namespace ft {
@@ -22,20 +23,19 @@ namespace ft {
     class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T>{
 
         public:
-            typedef Iterator                                                        iterator_type;
-            typedef T*                                                              val_pointer;
-            typedef typename ft::iterator_traits<val_pointer>::pointer              pointer;
-            typedef typename ft::iterator_traits<val_pointer>::reference            reference;
-            typedef typename ft::iterator_traits<val_pointer>::value_type           value_type;
-            typedef typename ft::iterator_traits<val_pointer>::difference_type      difference_type;
-            typedef typename ft::iterator_traits<val_pointer>::iterator_category    iterator_category;
+            typedef Iterator                                              iterator_type;
+            typedef typename ft::iterator_traits<T>::pointer              pointer;
+            typedef typename ft::iterator_traits<T>::reference            reference;
+            typedef typename ft::iterator_traits<T>::value_type           value_type;
+            typedef typename ft::iterator_traits<T>::difference_type      difference_type;
+            typedef typename ft::iterator_traits<T>::iterator_category    iterator_category;
 
         private:
             iterator_type curr;
 
         public:
-            tree_iterator (void) { }
-            tree_iterator( iterator_type x ) : curr(x){ }
+            tree_iterator (void) : curr(NULL) { }
+            tree_iterator( iterator_type x ) : curr(x) { }
             template< class U >
             tree_iterator( const tree_iterator<T, Iterator>& other ) : curr(other.base()) { }
 

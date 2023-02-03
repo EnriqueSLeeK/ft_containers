@@ -6,7 +6,7 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/27 22:29:47 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/09 23:48:52 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/02/02 22:44:33 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <iterator>
 #include "algorithm.hpp"
 #include "utility.hpp"
+#include "type_traits.hpp"
 #include "tree_iterator.hpp"
 #include "RedBlackTree.hpp"
 #include "reverse_iterator.hpp"
@@ -28,7 +29,7 @@ namespace ft {
     template<class Key,
         class T,
         class Compare = std::less< Key >,
-        class Allocator = std::allocator< std::pair< const Key, T > > >
+        class Allocator = std::allocator< ft::pair< const Key, T > > >
         class map {
         public:
             typedef Key                                                     key_type;
@@ -60,8 +61,8 @@ namespace ft {
             typedef typename Allocator::const_pointer                       const_pointer;
             typedef ft::node<value_type>                                    node;
             typedef node*                                                   node_pointer;
-            typedef ft::tree_iterator<value_type, node_pointer>             iterator;
-            typedef ft::tree_iterator<const value_type, node_pointer>       const_iterator;
+            typedef ft::tree_iterator<pointer, node_pointer>                iterator;
+            typedef ft::tree_iterator<const_pointer, node_pointer>          const_iterator;
             typedef ft::reverse_iterator<iterator>                          reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
             typedef ft::RedBlackTree<node, value_type, value_compare>       tree_type;
@@ -81,12 +82,15 @@ namespace ft {
             template< class InputIt >
             map( InputIt first, InputIt last,
                     const Compare& comp = Compare(),
-                    const Allocator& alloc = Allocator() ) :
+                    const Allocator& alloc = Allocator(),
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) :
                 _tree(tree_type(value_compare(comp), alloc)) {
                 insert(first, last);
             }
 
-            map( const map& other ) {
+            map( const map& other ) :
+                _tree(tree_type(other._tree.getComparator(),
+                    other._tree.getAllocator())) {
                 *this = other;
             }
             //  Constructor end#########################
@@ -94,6 +98,8 @@ namespace ft {
             //  Copy assign ############################
             map &operator=(const map& other) {
                 _tree = other._tree;
+                insert(other.begin(), other.end());
+                return (*this);
             }
             //  Copy assign end#########################
 
@@ -109,14 +115,14 @@ namespace ft {
 
             // Accessor ################################
             T& at( const Key& key ) {
-                node_pointer node = _tree.search(value_type(key), T());
+                node_pointer node = _tree.search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
             }
 
             const T& at(const Key& key) const {
-                node_pointer node = _tree.search(value_type(key), T());
+                node_pointer node = _tree.search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
@@ -137,7 +143,7 @@ namespace ft {
             } 
 
             const_iterator begin(void) const {
-                return (const_iterator(_tree.begin()));
+                return (const_iterator( _tree.begin()));
             }
 
             iterator end (void) {
@@ -153,7 +159,7 @@ namespace ft {
             }
 
             const_reverse_iterator rbegin(void) const {
-                return (reverse_iterator(end()));
+                return (const_reverse_iterator(end()));
             }
 
             reverse_iterator rend (void) {
@@ -161,7 +167,7 @@ namespace ft {
             }
 
             const_reverse_iterator rend(void) const {
-                return (reverse_iterator(begin()));
+                return (const_reverse_iterator(begin()));
             }
             // Iterators end ###########################
 
@@ -202,26 +208,29 @@ namespace ft {
             }
 
             template< class InputIt >
-            void insert ( InputIt first, InputIt last ) {
-                for (InputIt curr = first; curr != last; curr++)
+            void insert ( InputIt first, InputIt last ,
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) {
+                for (InputIt curr = first;
+                        curr != last;
+                        curr++) {
                     insert(*curr);
+                }
             }
 
             iterator erase( iterator pos ) {
-                node_pointer target_node = _tree.search(pos.base());
-                if (target_node != NULL)
-                    _tree.delete_node(target_node);
+                if (pos.base() != NULL)
+                    _tree.delete_node(pos.base());
                 return (pos);
             }
 
             iterator erase( iterator first, iterator last ) {
-                for (iterator curr = first; curr != last; curr++)
-                    erase(curr);
+                for (iterator curr = first; curr != last;)
+                    erase(curr++);
                 return (last);
             }
 
             size_type erase( const Key& key ) {
-                node_pointer target = _tree.search(value_type(key));
+                node_pointer target = _tree.search(value_type(key, T()));
                 if (target == NULL)
                     return (0);
                 _tree.delete_node(target);
