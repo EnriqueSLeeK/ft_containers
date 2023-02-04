@@ -205,11 +205,8 @@ namespace ft {
                     y->color = target->color;
                 }
                 
-                if (y_original_color == BLACK) {
-                    std::cout << "is end:  " << (x == _end) << std::endl;
-                    std::cout << ">>> " << x->value.second << std::endl;
+                if (y_original_color == BLACK)
                     deleteFix(x);
-                }
 
                 if (flag && _end->parent != NULL)
                     _end->parent->right = _end;
@@ -222,10 +219,12 @@ namespace ft {
             node_pointer search (const value_type &val) {
                 value_type tmp = val;
                 node_pointer curr = _root;
+
                 while (curr != NULL && curr != _end) {
+                    
                     if (curr->value.first == val.first)
                         return (curr);
-                    curr = _comp(tmp, curr->value) ? curr -> right : curr -> left;
+                    curr = _comp(tmp, curr->value) ? curr -> left : curr -> right;
                 }
                 return (NULL);
             }
@@ -292,11 +291,13 @@ namespace ft {
                 return (_end);
             }
 
+            // Swapping each other
             void swap (RedBlackTree &other) {
                 std::swap(_allocator, other._allocator);
                 std::swap(_comp, other._comp);
                 std::swap(_root, other._root);
                 std::swap(_size, other._size);
+                std::swap(_end, other._end);
             }
 
         private:
@@ -316,7 +317,7 @@ namespace ft {
             }
 
             // ref_node => the rotation will happen will happen in relation
-            // to this node
+            //                  to this node
             void            rotation_left (node_pointer ref_node) {
                 node_pointer y = ref_node->right;
                 ref_node->right = y->left;

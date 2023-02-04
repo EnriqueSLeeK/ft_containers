@@ -115,6 +115,7 @@ namespace ft {
 
             // Accessor ################################
             T& at( const Key& key ) {
+                std::cout << "Key: " << key << std::endl;
                 node_pointer node = _tree.search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");

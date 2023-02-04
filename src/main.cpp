@@ -46,7 +46,7 @@ int main() {
     std::cout << ">>> Accessor test" << std::endl;
     access_map_test_b< std::map<int, std::string>,
                        ft::map<int, std::string> >
-                          (ft_pair_list, pair_list, 10, 99);
+                          (ft_pair_list, pair_list, 3, 99);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Capacity test" << std::endl;
@@ -60,7 +60,11 @@ int main() {
                            ft::map<int, std::string> >
                             (ft_pair_list, pair_list);
     std::cout << "------------------------" << std::endl;
+
     std::cout << ">>> Swap" << std::endl;
+    swap_test_b < std::map<int, std::string>,
+                  ft::map<int, std::string> >
+                    (ft_pair_list, pair_list);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Element access" << std::endl;

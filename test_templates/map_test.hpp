@@ -93,14 +93,17 @@ template <typename std_map_type, typename ft_map_type,
          typename key_type >
 void    accessor_test(ft_data *fdata, std_data *data,
         key_type valid, key_type invalid) {
-    std::cout << "Accessor test" << std::endl;
+    std::cout << "Accessor test #####################" << std::endl;
+
     std::cout << "at access" << std::endl;
     std_map_type smap(data, data + 6);
     ft_map_type fmap(fdata, fdata + 6);
 
     try {
+
         if (fmap.at(valid) == smap.at(valid))
             std::cout << "OK";
+
     } catch (std::exception &e) {
         std::cout << "KO";
     }
@@ -115,36 +118,25 @@ void    accessor_test(ft_data *fdata, std_data *data,
     std::cout << std::endl;
 
     std::cout << "[] operator accessor" << std::endl;
-    try {
-        if (fmap[valid] == smap[valid])
-            std::cout << "OK";
-    } catch (std::exception &e) {
-        std::cout << "KO";
-    }
+
+    if (fmap[valid] == smap[valid])
+        std::cout << "OK";
+    else
+    std::cout << "KO";
     std::cout << std::endl;
 
-    try {
-        if (fmap[invalid] == smap[invalid])
-            std::cout << "OK";
-    } catch (std::exception &e) {
+    if (fmap[invalid] == smap[invalid])
+        std::cout << "OK";
+    else
         std::cout << "KO";
-    }
     std::cout << std::endl;
 }
-
-template <typename std_map_type, typename ft_map_type,
-         typename std_data, typename ft_data >
-void init_map_test_b (ft_data *fdata, std_data *data) {
-    init_map_test< std_map_type,
-                    ft_map_type,
-                    std_data,
-                    ft_data > (fdata, data);
-}
-
 
 template <typename std_map_type, typename ft_map_type,
          typename std_data, typename ft_data >
 void capacity_test(std_data *data, ft_data *fdata) {
+
+    std::cout << "Size method test" << std::endl;
     std_map_type map(data, data + 6);
     ft_map_type fmap(fdata, fdata + 6);
     if (map.size() == fmap.size())
@@ -160,6 +152,22 @@ void capacity_test(std_data *data, ft_data *fdata) {
     else
         std::cout << "KO";
     std::cout << std::endl;
+    
+    std::cout << "Empty method test" << std::endl;
+    std_map_type empty_map;
+    ft_map_type empty_fmap;
+    if (empty_map.empty() == empty_fmap.empty())
+        std::cout << "OK";
+    else
+        std::cout << "KO";
+    std::cout << std::endl;
+
+}
+
+template <typename std_map_type, typename ft_map_type>
+static void wipe_eveything(std_map_type &std_map, ft_map_type &ft_map) {
+    std_map.clear();
+    ft_map.clear();
 }
 
 template <typename std_map_type, typename ft_map_type,
@@ -171,14 +179,14 @@ void insert_delete_test(std_data *data, ft_data *fdata) {
     std::cout << "Random insertion" << std::endl;
     map.insert(data[5]);
     map.insert(data[4]);
-    map.insert(data[0]);
+    map.insert(data[1]);
     map.insert(data[2]);
     map.insert(data[0]);
     map.insert(data[0]);
     map.insert(data[0]);
     fmap.insert(fdata[5]);
     fmap.insert(fdata[4]);
-    fmap.insert(fdata[0]);
+    fmap.insert(fdata[1]);
     fmap.insert(fdata[2]);
     fmap.insert(fdata[0]);
     fmap.insert(fdata[0]);
@@ -186,8 +194,7 @@ void insert_delete_test(std_data *data, ft_data *fdata) {
     std::cout << (check_equality(map, fmap) ? "OK" : "KO") << std::endl;
 
     std::cout << "Clear everything" << std::endl;
-    map.clear();
-    fmap.clear();
+    wipe_eveything(map, fmap);
     std::cout << (check_equality(map, fmap) ? "OK" : "KO") << std::endl;
 
     std::cout << "Insert and individual deletion" << std::endl;
@@ -198,47 +205,46 @@ void insert_delete_test(std_data *data, ft_data *fdata) {
     fmap.insert(fdata[2]);
     fmap.insert(fdata[4]);
     fmap.insert(fdata[0]);
-    /*
-    fmap.insert(fdata[0]);
-    fmap.insert(fdata[1]);
-    fmap.insert(fdata[2]);
-    fmap.insert(fdata[3]);
-    fmap.insert(fdata[4]);
-    fmap.insert(fdata[5]);
-    */
 
-
-    /*
-    typename ft_map_type::iterator fbegin = fmap.begin();
-    typename ft_map_type::iterator fend = fmap.end();
-    show_map(fbegin, fend);
-
-    typename ft_map_type::iterator test = fmap.begin();
-    */
-
-    typename ft_map_type::iterator fbegin = fmap.begin();
-    typename ft_map_type::iterator fend = fmap.end();
-    show_map(fbegin, fend);
-
-    //fmap.erase(++fmap.begin(), --fmap.end());
-    fmap.erase(fmap.begin(), --fmap.end());
-    /*
     fmap.erase(++fmap.begin());
     fmap.erase(++++fmap.begin());
     fmap.erase(--fmap.end());
-    */
 
-    fbegin = fmap.begin();
-    fend = fmap.end();
-    show_map(fbegin, fend);
+    map.insert(data[0]);
+    map.insert(data[2]);
+    map.insert(data[4]);
+    std::cout << (check_equality(map, fmap) ? "OK" : "KO") << std::endl;
+    wipe_eveything(map, fmap);
 
-    //map.insert(data[1]);
-    //map.insert(data[2]);
-    //map.insert(data[3]);
-    //map.insert(data[4]);
-    //map.insert(data[5]);
-    //std::cout << (check_equality(map, fmap) ? "OK" : "KO") << std::endl;
+    std::cout << "Bulk deletion and insertion" << std::endl;
+    fmap.insert(fdata + 1, fdata + 5);
+    map.insert(data + 1, data + 5);
+    
+    fmap.erase(fmap.begin(), fmap.end());
+    map.erase(map.begin(), map.end());
+    std::cout << (check_equality(map, fmap) ? "OK" : "KO") << std::endl;
+    wipe_eveything(map, fmap);
+}
 
+
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data >
+void swap_test (std_data *data, ft_data *fdata) {
+    std_map_type map1(data + 1, data + 3);
+    std_map_type map2(data, data + 5);
+
+    ft_map_type fmap1(fdata + 1, fdata + 3);
+    ft_map_type fmap2(fdata, fdata + 5);
+
+    std::cout << "First swap operation => Swap 1 with 2" << std::endl;
+    map1.swap(map2);
+    fmap1.swap(fmap2);
+    std::cout << (check_equality(map1, fmap1) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Second swap operation => Swap 1 with 2 aka will restore the original content" << std::endl;
+    swap(map1, map2);
+    swap(fmap1, fmap2);
+    std::cout << (check_equality(map1, fmap1) ? "OK" : "KO") << std::endl;
 }
 
 template <typename std_map_type, typename ft_map_type,
@@ -268,6 +274,24 @@ void insert_delete_test_b (ft_data *fdata, std_data *data){
                          ft_map_type,
                          std_data,
                          ft_data > (data, fdata);
+}
+
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data >
+void swap_test_b (ft_data *fdata, std_data *data){
+    swap_test < std_map_type,
+                 ft_map_type,
+                 std_data,
+                 ft_data > (data, fdata);
+}
+
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data >
+void init_map_test_b (ft_data *fdata, std_data *data) {
+    init_map_test< std_map_type,
+                    ft_map_type,
+                    std_data,
+                    ft_data > (fdata, data);
 }
 
 #endif

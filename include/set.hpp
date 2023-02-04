@@ -24,7 +24,7 @@ template< class Key,
     class Compare = std::less<Key>,
     class Allocator = std::allocator<Key> >
     class set {
-        private:
+        public:
             typedef Key                                                     key_type;
             typedef Key                                                     value_type;
             typedef std::size_t                                             size_type;
