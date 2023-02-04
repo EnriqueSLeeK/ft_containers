@@ -221,13 +221,12 @@ void insert_delete_test(std_data *data, ft_data *fdata) {
     show_map(fbegin, fend);
 
     //fmap.erase(++fmap.begin(), --fmap.end());
-    fmap.erase(++fmap.begin(), fmap.end());
+    fmap.erase(fmap.begin(), --fmap.end());
     /*
     fmap.erase(++fmap.begin());
     fmap.erase(++++fmap.begin());
     fmap.erase(--fmap.end());
     */
-
 
     fbegin = fmap.begin();
     fend = fmap.end();

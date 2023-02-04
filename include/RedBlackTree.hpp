@@ -204,10 +204,12 @@ namespace ft {
                     y->left->parent = y;
                     y->color = target->color;
                 }
-
-                std::cout << _end->parent->value.first << std::endl;
-                if (y_original_color == BLACK)
+                
+                if (y_original_color == BLACK) {
+                    std::cout << "is end:  " << (x == _end) << std::endl;
+                    std::cout << ">>> " << x->value.second << std::endl;
                     deleteFix(x);
+                }
 
                 if (flag && _end->parent != NULL)
                     _end->parent->right = _end;
@@ -439,8 +441,10 @@ namespace ft {
 
             void deleteFix (node_pointer x) {
                 node_pointer w = NULL;
-                while (x != NULL && x != _root && x->color == BLACK) {
-
+                while (x != _end
+                        && x != NULL
+                        && x != _root
+                        && x->color == BLACK) {
                     if (x == x->parent->left) {
                         w = x->parent->right;
                         if (w->color == RED) {
