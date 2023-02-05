@@ -216,7 +216,7 @@ namespace ft {
                 destroy_node(target);
             }
 
-            node_pointer search (const value_type &val) {
+            node_pointer search (const value_type &val) const {
                 value_type tmp = val;
                 node_pointer curr = _root;
 
@@ -229,44 +229,34 @@ namespace ft {
                 return (NULL);
             }
 
-            iterator upper_bound (const value_type &val) {
-                iterator iter = iterator(begin());
-                for (size_type i = 0; i < _size; i++) {
-                    if (_comp(val, *iter))
-                        break ;
-                    ++iter;
+            node_pointer upper_bound (const value_type &val) const {
+                value_type tmp = val;
+                node_pointer curr = _root;
+
+                while (curr != NULL && curr != _end) {
+                    if (curr->value.first > tmp.first)
+                        return (curr);
+                    curr = _comp(tmp, curr->value) ? curr -> left : curr -> right;
                 }
-                return (iter);
+                return (_end);
             }
 
-            const_iterator upper_bound (const value_type &val) const {
-                const_iterator iter = iterator(begin());
-                for (size_type i = 0; i < _size; i++) {
-                    if (_comp(val, *iter))
-                        break ;
-                    ++iter;
-                }
-                return (iter);
-            }
+            node_pointer lower_bound (const value_type &val) const {
+                value_type tmp = val;
+                node_pointer curr = _root;
+                node_pointer candidate = NULL;
+                bool status = false;
 
-            iterator lower_bound (const value_type &val) {
-                iterator iter = iterator(begin());
-                for (size_type i = 0; i < _size; i++) {
-                    if (!(_comp(*iter, val)))
-                        return (iter);
-                    ++iter;
-                }
-                return (iterator(end()));
-            }
+                while (curr != NULL && curr != _end) {
+                    status = curr->value.first >= tmp.first;
+                    if (status)
+                        candidate = curr;
 
-            const_iterator lower_bound (const value_type &val) const {
-                const_iterator iter = iterator(begin());
-                for (size_type i = 0; i < _size; i++) {
-                    if (!(_comp(*iter, val)))
-                        return (iter);
-                    ++iter;
+                    curr = _comp(tmp, curr->value) ? curr -> left : curr -> right;
                 }
-                return (const_iterator(end()));
+                if (candidate == NULL)
+                    return (_end);
+                return (candidate);
             }
 
             size_t size (void) const {

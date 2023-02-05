@@ -128,7 +128,8 @@ namespace ft {
             }
 
             template< class InputIt >
-            void assign( InputIt first, InputIt last ) {
+            void assign( InputIt first, InputIt last,
+                            typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0) {
                 for (size_type offset = 0; (first + offset) < last; offset++)
                     _allocator.construct(_data + offset, *(first + offset));
             }

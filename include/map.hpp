@@ -49,7 +49,7 @@ namespace ft {
                     typedef bool        result_type;
                     typedef value_type  first_argument_type;
                     typedef value_type  second_argument_type;
-                    bool operator()(first_argument_type &lhs, second_argument_type &rhs) {
+                    bool operator()(first_argument_type &lhs, second_argument_type &rhs) const {
                         return (comp(lhs.first, rhs.first));
                     }
             };
@@ -115,7 +115,6 @@ namespace ft {
 
             // Accessor ################################
             T& at( const Key& key ) {
-                std::cout << "Key: " << key << std::endl;
                 node_pointer node = _tree.search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
@@ -245,40 +244,48 @@ namespace ft {
 
             // Lookup ##################################
             size_type count( const Key& key ) const {
-                node_pointer target = _tree.search(value_type(key));
-                if (target == NULL)
+                node_pointer node = _tree.search(value_type(key, mapped_key()));
+                if (node == NULL)
                     return (0);
                 return (1);
             }
 
             iterator find( const Key& key ) {
-                node_pointer find_target = _tree.search(value_type(key));
+                node_pointer find_target = _tree.search(value_type(key, mapped_key()));
                 if (find_target == NULL)
                     return (end());
                 return (iterator(find_target));
             }
 
             const_iterator find( const Key& key ) const {
-                node_pointer find_target = _tree.search(value_type(key));
+                node_pointer find_target = _tree.search(value_type(key, mapped_key()));
                 if (find_target == NULL)
                     return (end());
                 return (const_iterator(find_target));
             }
 
             iterator upper_bound( const Key& key ) {
-                return (_tree.upper_bound(value_type(key, mapped_key())));
+                return (iterator(
+                            _tree.upper_bound(
+                                value_type(key, mapped_key()))));
             }
 
             const_iterator upper_bound( const Key& key ) const {
-                return (_tree.upper_bound(value_type(key, mapped_key())));
+                return (const_iterator(
+                            _tree.upper_bound(
+                                value_type(key, mapped_key()))));
             }
 
             iterator lower_bound( const Key& key ) {
-                return (_tree.lower_bound(value_type(key, mapped_key())));
+                return (iterator(
+                            _tree.lower_bound(
+                                value_type(key, mapped_key()))));
             }
 
             const_iterator lower_bound( const Key& key ) const {
-                return (_tree.lower_bound(value_type(key, mapped_key())));
+                return (const_iterator(
+                            _tree.lower_bound(
+                                value_type(key, mapped_key()))));
             }
 
             ft::pair<iterator,iterator> equal_range( const Key& key ) {
@@ -303,7 +310,8 @@ namespace ft {
     template< class Key, class T, class Compare, class Alloc >
     bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs,
                     const ft::map<Key,T,Compare,Alloc>& rhs ) {
-        return (lhs.size() == rhs.size() && ft::equal(lhs, rhs));
+        return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(),
+                                                        rhs.begin(), rhs.end()));
     }
 
 
@@ -311,7 +319,7 @@ namespace ft {
     bool operator<( const ft::map<Key,T,Compare,Alloc>& lhs,
                     const ft::map<Key,T,Compare,Alloc>& rhs ) {
         return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
-                    rhs.begin(), rhs.end()));
+                                                rhs.begin(), rhs.end()));
     }
 
     template< class Key, class T, class Compare, class Alloc >
@@ -324,19 +332,19 @@ namespace ft {
     template< class Key, class T, class Compare, class Alloc >
     bool operator<=( const ft::map<Key,T,Compare,Alloc>& lhs,
                      const ft::map<Key,T,Compare,Alloc>& rhs ) {
-        return (rhs < lhs || rhs == lhs);
+        return (lhs < rhs || lhs == rhs);
     }
 
     template< class Key, class T, class Compare, class Alloc >
     bool operator>( const ft::map<Key,T,Compare,Alloc>& lhs,
                     const ft::map<Key,T,Compare,Alloc>& rhs ) {
-        return (!(rhs < lhs));
+        return (lhs != rhs && !(lhs < rhs));
     }
 
     template< class Key, class T, class Compare, class Alloc >
     bool operator>=( const ft::map<Key,T,Compare,Alloc>& lhs,
                     const ft::map<Key,T,Compare,Alloc>& rhs ) {
-        return (rhs > lhs || rhs == lhs);
+        return (lhs > rhs || rhs == lhs);
     }
 
     template< class Key, class T, class Compare, class Alloc >

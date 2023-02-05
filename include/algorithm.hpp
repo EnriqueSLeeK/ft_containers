@@ -12,6 +12,7 @@
 
 #ifndef ALGORITHM_HPP
 # define ALGORITHM_HPP
+#include <iostream>
 namespace ft {
 
     template< class InputIt1, class InputIt2 >

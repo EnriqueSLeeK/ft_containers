@@ -22,6 +22,7 @@
 #include <iostream>
 #include <stdexcept>
 
+// Test function #####################################################################################
 template <typename std_tree, typename ft_tree>
 bool check_equality (std_tree std_map, ft_tree ft_map) {
 
@@ -40,28 +41,8 @@ bool check_equality (std_tree std_map, ft_tree ft_map) {
     typename ft_tree::reverse_iterator rfbegin = ft_map.rbegin();
     typename ft_tree::reverse_iterator rfend = ft_map.rend();
 
-    while (begin != end && fbegin != fend
-            && rbegin != rend && rfbegin != rfend) {
-
-        if ((*begin).first != (*fbegin).first ||
-                (*begin).second != (*fbegin).second) {
-            return (false);
-        }
-
-        if ((*rbegin).first != (*rfbegin).first ||
-                (*rbegin).second != (*rfbegin).second) {
-            return (false);
-        }
-
-        ++begin;
-        ++fbegin;
-
-        ++rbegin;
-        ++rfbegin;
-    }
-
-    return (begin == end && fbegin == fend
-            && rbegin == rend && rfbegin == rfend);
+    return (check_interval_equality(begin, end, fbegin, fend) &&
+                check_interval_equality(rbegin, rend, rfbegin, rfend));
 }
 
 template <typename std_map_type, typename ft_map_type,
@@ -250,6 +231,98 @@ void swap_test (std_data *data, ft_data *fdata) {
 template <typename std_map_type, typename ft_map_type,
          typename std_data, typename ft_data,
          typename key_type >
+void look_up_test (std_data *data, ft_data *fdata, key_type valid, key_type invalid) {
+
+    std_map_type map(data, data + 5);
+    ft_map_type fmap(fdata, fdata + 5);
+    
+    std::cout << "Count method test" << std::endl;
+    std::cout << (map.count(valid) == fmap.count(valid) ? "OK" : "KO") << std::endl; // Test a valid case
+    std::cout << (map.count(invalid) == fmap.count(invalid) ? "OK" : "KO") << std::endl; // Test invalid case
+    
+    std::cout << "Find method test" << std::endl;
+    typename std_map_type::iterator iter = map.find(valid);
+    typename ft_map_type::iterator fiter = fmap.find(valid);
+    std::cout << ((*iter).first == (*fiter).first ? "OK" : "KO") << std::endl; // Test a valid case
+
+    iter = map.find(invalid);
+    fiter = fmap.find(invalid);
+    std::cout << (iter == map.end() && fiter == fmap.end() ? "OK" : "KO") << std::endl;
+    
+    typename std_map_type::iterator end = map.end();
+    typename ft_map_type::iterator fend = fmap.end();
+
+    std::cout << "Lower Bound test" << std::endl;
+    iter = map.lower_bound(valid);
+    fiter = fmap.lower_bound(valid);
+    std::cout <<
+        (check_interval_equality(iter, end, fiter, fend) ? "OK" : "KO")
+            << std::endl;
+
+    std::cout << "Upper Bound test" << std::endl;
+    iter = map.upper_bound(valid);
+    fiter = fmap.upper_bound(valid);
+    std::cout <<
+        (check_interval_equality(iter, end, fiter, fend) ? "OK" : "KO")
+            << std::endl;
+
+    std::cout << "Equal Bound test" << std::endl;
+    ft::pair<typename ft_map_type::iterator,
+                typename ft_map_type::iterator> feq = fmap.equal_range(valid);
+    std::pair<typename std_map_type::iterator,
+                typename std_map_type::iterator> eq = map.equal_range(valid);
+
+    std::cout <<
+        (check_interval_equality(eq.first, eq.second, feq.first, feq.second) ? "OK" : "KO")
+            << std::endl;
+
+}
+
+
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data>
+void operator_test (std_data *data, ft_data *fdata) {
+    
+    (void)data;
+    ft_map_type fmap1(fdata, fdata + 3);
+    ft_map_type fmap2(fdata, fdata + 3);
+    ft_map_type fmap3(fdata, fdata + 5);
+
+    std_map_type map1(data, data + 3);
+    std_map_type map2(data, data + 3);
+    std_map_type map3(data, data + 5);
+    
+    std::cout << "Operator ==" << std::endl;
+    std::cout << ((map1 == map2) == (fmap1 == fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 == map3) == (fmap1 == fmap3) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Operator <" << std::endl;
+    std::cout << ((map1 < map2) == (fmap1 < fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 < map3) == (fmap1 < fmap3) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Operator <=" << std::endl;
+    std::cout << ((map1 <= map2) == (fmap1 <= fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 <= map3) == (fmap1 <= fmap3) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Operator >" << std::endl;
+    std::cout << ((map1 > map2) == (fmap1 > fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 > map3) == (fmap1 > fmap3) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Operator >=" << std::endl;
+    std::cout << ((map1 >= map2) == (fmap1 >= fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 >= map3) == (fmap1 >= fmap3) ? "OK" : "KO") << std::endl;
+
+    std::cout << "Operator !=" << std::endl;
+    std::cout << ((map1 != map2) == (fmap1 != fmap2) ? "OK" : "KO") << std::endl;
+    std::cout << ((map1 != map3) == (fmap1 != fmap3) ? "OK" : "KO") << std::endl;
+}
+
+// Test functions end ################################################################################
+
+// Wrappers for the test functions ###################################################################
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data,
+         typename key_type >
 void access_map_test_b (ft_data *fdata, std_data *data,
         key_type valid, key_type invalid) {
     accessor_test< std_map_type,
@@ -286,6 +359,26 @@ void swap_test_b (ft_data *fdata, std_data *data){
 }
 
 template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data,
+         typename key_type>
+void look_up_test_b (ft_data *fdata, std_data *data,
+                        key_type valid, key_type invalid){
+    look_up_test < std_map_type,
+                 ft_map_type,
+                 std_data,
+                 ft_data > (data, fdata, valid, invalid);
+}
+
+template <typename std_map_type, typename ft_map_type,
+         typename std_data, typename ft_data >
+void operator_test_b (ft_data *fdata, std_data *data) {
+    operator_test < std_map_type,
+                    ft_map_type,
+                    std_data,
+                    ft_data > (data, fdata);
+}
+
+template <typename std_map_type, typename ft_map_type,
          typename std_data, typename ft_data >
 void init_map_test_b (ft_data *fdata, std_data *data) {
     init_map_test< std_map_type,
@@ -293,5 +386,6 @@ void init_map_test_b (ft_data *fdata, std_data *data) {
                     std_data,
                     ft_data > (fdata, data);
 }
+// Wrappers for the test functions end ###############################################################
 
 #endif

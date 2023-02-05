@@ -66,11 +66,17 @@ int main() {
                   ft::map<int, std::string> >
                     (ft_pair_list, pair_list);
     std::cout << "------------------------" << std::endl;
-
-    std::cout << ">>> Element access" << std::endl;
+    
+    std::cout << "Look up test" << std::endl;
+    look_up_test_b < std::map<int, std::string>,
+                      ft::map<int, std::string> >
+                        (ft_pair_list, pair_list, 3, -1);
     std::cout << "------------------------" << std::endl;
 
-    std::cout << ">>> Operands" << std::endl;
+    std::cout << ">>> Operator test" << std::endl;
+    operator_test_b < std::map<int, std::string>,
+                      ft::map<int, std::string> >
+                        (ft_pair_list, pair_list);
     std::cout << "------------------------" << std::endl;
 
     return (0);

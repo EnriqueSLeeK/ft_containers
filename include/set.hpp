@@ -58,7 +58,9 @@ template< class Key,
             template< class InputIt >
             set( InputIt first, InputIt last,
                 const Compare& comp = Compare(),
-                const Allocator& alloc = Allocator() ) : _tree(tree_type(comp, alloc))  {
+                const Allocator& alloc = Allocator(),
+                typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) :
+                    _tree(tree_type(comp, alloc)) {
                 insert(first, last);
             }
 
@@ -146,26 +148,26 @@ template< class Key,
             }
 
             template< class InputIt >
-            void insert ( InputIt first, InputIt last ) {
+            void insert ( InputIt first, InputIt last,
+                            typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0) {
                 for (InputIt curr = first; curr != last; curr++)
                     insert(*curr);
             }
 
             iterator erase( iterator pos ) {
-                node_pointer target_node = _tree.search(*pos);
-                if (target_node != NULL)
-                    _tree.delete_node(target_node);
+                if (pos.base() != NULL)
+                    _tree.delete_node(pos.base());
                 return (pos);
             }
 
             iterator erase( iterator first, iterator last ) {
-                for (iterator curr = first; curr != last; curr++)
-                    erase(curr);
+                for (iterator curr = first; curr != last;)
+                    erase(curr++);
                 return (last);
             }
 
             size_type erase( const Key& key ) {
-                node_pointer target = search(value_type(key));
+                node_pointer target = _tree.search(key);
                 if (target == NULL)
                     return (0);
                 _tree.delete_node(target);
@@ -186,33 +188,33 @@ template< class Key,
             }
 
             iterator find( const Key& key ) {
-                node_pointer find_target = _tree.search(value_type(key));
+                node_pointer find_target = _tree.search(key);
                 if (find_target == NULL)
                     return (end());
                 return (iterator(find_target));
             }
 
             const_iterator find( const Key& key ) const {
-                node_pointer find_target = _tree.search(value_type(key));
+                node_pointer find_target = _tree.search(key);
                 if (find_target == NULL)
                     return (end());
                 return (const_iterator(find_target));
             }
 
             iterator upper_bound( const Key& key ) {
-                return (_tree.upper_bound(key));
+                return (iterator(_tree.upper_bound(key)));
             }
 
             const_iterator upper_bound( const Key& key ) const {
-                return (_tree.upper_bound(key));
+                return (const_iterator(_tree.upper_bound(key)));
             }
 
             iterator lower_bound( const Key& key ) {
-                return (_tree.lower_bound(key));
+                return (iterator(_tree.lower_bound(key)));
             }
 
             const_iterator lower_bound( const Key& key ) const {
-                return (_tree.lower_bound(key));
+                return (const_iterator(_tree.lower_bound(key)));
             }
 
             ft::pair<iterator,iterator> equal_range( const Key& key ) {
@@ -257,19 +259,19 @@ template< class Key,
     template< class Key, class Compare, class Alloc >
     bool operator<=( const ft::set<Key,Compare,Alloc>& lhs,
                      const ft::set<Key,Compare,Alloc>& rhs ) {
-        return (rhs < lhs || rhs == lhs);
+        return (lhs < rhs || lhs == rhs);
     }
 
     template< class Key, class Compare, class Alloc >
     bool operator>( const ft::set<Key,Compare,Alloc>& lhs,
                     const ft::set<Key,Compare,Alloc>& rhs ) {
-        return (!(rhs < lhs));
+        return ((lhs != rhs)  && !(lhs < rhs));
     }
 
     template< class Key, class Compare, class Alloc >
     bool operator>=( const ft::set<Key,Compare,Alloc>& lhs,
                     const ft::set<Key,Compare,Alloc>& rhs ) {
-        return (rhs > lhs || rhs == lhs);
+        return (lhs > rhs || lhs == rhs);
     }
 
     template< class Key, class Compare, class Alloc >

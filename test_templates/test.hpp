@@ -37,4 +37,20 @@ void show_map (Iter begin, Iter end) {
             << (*curr).second << std::endl;
     std::cout << "###########################################" << std::endl;
 }
+
+template < typename std_iterator, typename ft_iterator >
+bool    check_interval_equality (std_iterator begin, std_iterator end,
+                                    ft_iterator fbegin, ft_iterator fend) {
+
+    while (begin != end && fbegin != fend) {
+        if ((*begin).first != (*fbegin).first ||
+                (*begin).second != (*fbegin).second) {
+            return (false);
+        }
+        ++begin;
+        ++fbegin;
+    }
+    return (begin == end && fbegin == fend);
+}
+
 #endif
