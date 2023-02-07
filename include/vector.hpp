@@ -16,6 +16,7 @@
 #include <limits>
 #include <memory>
 #include <stdexcept>
+#include "utility.hpp"
 #include "algorithm.hpp"
 #include "type_traits.hpp"
 #include "reverse_iterator.hpp"

@@ -17,15 +17,18 @@ SRC := main.cpp
 
 SRC_VECTOR := vector_main.cpp vector_test.cpp
 
+SRC_SET := set_main.cpp
 SRC_MAP := map_main.cpp
 
 OBJ := $(SRC:cpp=o)
 OBJ_VEC := $(SRC_VECTOR:cpp=o)
 OBJ_MM := $(SRC_MAP:cpp=o)
+OBJ_SETT := $(SRC_SET:cpp=o)
 
 DIR_OBJ := ./obj/
 OBJ_M := $(addprefix $(DIR_OBJ), $(OBJ))
 OBJ_MAP := $(addprefix $(DIR_OBJ), $(OBJ_MM))
+OBJ_SET := $(addprefix $(DIR_OBJ), $(OBJ_SETT))
 OBJ_V := $(addprefix $(DIR_OBJ), $(OBJ_VEC))
 
 VPATH := ./src/ \
@@ -48,8 +51,11 @@ vtest: $(OBJ_V)
 	
 mtest: $(OBJ_MAP)
 	$(CC) $(CFLAGS) $(OBJ_MAP) -o map_test
+
+stest: $(OBJ_SET)
+	$(CC) $(CFLAGS) $(OBJ_SET) -o set_test
 	
-test: mtest vtest intra_test
+test: mtest vtest stest intra_test
 
 re: clean curr_test
 
@@ -57,4 +63,5 @@ clean:
 	rm -rf curr_test
 	rm -rf vector_test
 	rm -rf map_test
+	rm -rf set_test
 	rm -rf $(DIR_OBJ)

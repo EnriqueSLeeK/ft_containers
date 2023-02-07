@@ -6,19 +6,23 @@
 /*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 14:48:43 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/07 00:41:12 by ensebast         ###   ########.fr       */
+/*   Updated: 2023/02/02 02:05:24 by ensebast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "stack_test.h"
+#include "set_test.hpp"
+#include <utility>
 #include <string>
 #include <ostream>
 #include <iostream>
 
-int main() {
-    int k[6] = {1, 2, 3, 4, 5 };
+#include "set.hpp"
+#include <set>
 
-    std::string p[6] = {std::string("aaaa"),
+int main() {
+    int data[6] = {1, 2, 3, 4, 5, 6};
+
+    std::string data_string[6] = {std::string("aaaa"),
         std::string("bbbb"),
         std::string("cccc"),
         std::string("dddd"),
@@ -26,37 +30,34 @@ int main() {
         std::string("ffff")};
 
     std::cout << "Initialization Test" << std::endl;
-    init_test_m<int>(k, 1, "int");
-    init_test_m<std::string>(p, std::string("test"), "std::string");
+    init_set_test_b< std::set<int>,
+                     ft::set<int> > (data);
     std::cout << "------------------------" << std::endl;
 
-    std::cout << ">>> Basic push pop test" << std::endl;
-    push_pop_test_m<int>(k, "int");
-    push_pop_test_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
-
-    std::cout << ">>> Iterator test" << std::endl;
-    iterator_test_m<int>(k);
+    std::cout << ">>> Capacity test" << std::endl;
+    capacity_test_b< std::set<int>,
+                     ft::set<int> > (data);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Insertion and erase test" << std::endl;
-    insert_erase_test_m<int>(k, 99999, "int");
-    insert_erase_test_m<std::string>(p, std::string("test"), "std::string");
+    insert_delete_test_b < std::set<int>,
+                           ft::set<int> > (data);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Swap" << std::endl;
-    swap_m<int>(k, "int");
-    swap_m<std::string>(p, "std::string");
+    swap_test_b < std::set<int>,
+                  ft::set<int> > (data);
+    std::cout << "------------------------" << std::endl;
+    
+    std::cout << "Look up test" << std::endl;
+    look_up_test_b < std::set<int>,
+                      ft::set<int> >
+                        (data, 3, -1);
     std::cout << "------------------------" << std::endl;
 
-    std::cout << ">>> Element access" << std::endl;
-    access_m<int>(k, "int");
-    access_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
-
-    std::cout << ">>> Operands" << std::endl;
-    operator_m<int>(k, "int");
-    operator_m<std::string>(p, "std::string");
+    std::cout << ">>> Operator test" << std::endl;
+    operator_test_b < std::set<int>,
+                      ft::set<int> > (data);
     std::cout << "------------------------" << std::endl;
 
     return (0);

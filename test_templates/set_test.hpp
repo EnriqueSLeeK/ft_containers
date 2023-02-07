@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_test.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/08 13:29:24 by ensebast          #+#    #+#             */
+/*   Updated: 2023/02/03 00:13:49 by ensebast         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#ifndef MAP_TEST_HPP
-# define MAP_TEST_HPP
+#ifndef SET_TEST_HPP
+# define SET_TEST_HPP
 
 #include "set.hpp"
 #include "test.hpp"
