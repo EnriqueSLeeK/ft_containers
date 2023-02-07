@@ -283,7 +283,6 @@ template <typename std_map_type, typename ft_map_type,
          typename std_data, typename ft_data>
 void operator_test (std_data *data, ft_data *fdata) {
     
-    (void)data;
     ft_map_type fmap1(fdata, fdata + 3);
     ft_map_type fmap2(fdata, fdata + 3);
     ft_map_type fmap3(fdata, fdata + 5);

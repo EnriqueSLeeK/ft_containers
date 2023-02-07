@@ -23,6 +23,17 @@ namespace ft {
 
     template < class T >
     struct enable_if<true, T> { typedef T type; };
+    
+    template < class T >
+    struct is_pair {
+        static const bool value = false;
+    };
+
+    // Just selector to use the right function
+    template < class K, class V >
+    struct is_pair< ft::pair<K, V> > {
+        static const bool value = true;
+    };
 
     template < class T >
     struct is_integral {

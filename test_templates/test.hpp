@@ -38,6 +38,7 @@ void show_map (Iter begin, Iter end) {
     std::cout << "###########################################" << std::endl;
 }
 
+// For map
 template < typename std_iterator, typename ft_iterator >
 bool    check_interval_equality (std_iterator begin, std_iterator end,
                                     ft_iterator fbegin, ft_iterator fend) {
@@ -47,6 +48,20 @@ bool    check_interval_equality (std_iterator begin, std_iterator end,
                 (*begin).second != (*fbegin).second) {
             return (false);
         }
+        ++begin;
+        ++fbegin;
+    }
+    return (begin == end && fbegin == fend);
+}
+
+// For set
+template < typename std_iterator, typename ft_iterator >
+bool check_interval_normal (std_iterator begin, std_iterator end, 
+                                ft_iterator fbegin, ft_iterator fend) {
+
+    while (begin != end && fbegin != fend) {
+        if ((*begin) != (*fbegin))
+            return (false);
         ++begin;
         ++fbegin;
     }

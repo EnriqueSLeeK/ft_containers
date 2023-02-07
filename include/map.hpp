@@ -68,27 +68,29 @@ namespace ft {
             typedef ft::RedBlackTree<node, value_type, value_compare>       tree_type;
 
         private:
+            value_compare   _val_comp;
             tree_type       _tree;
 
         public:
 
             //  Constructor ############################
-            map (void) : _tree(value_compare(key_compare())) { }
+            map (void) : _val_comp(key_compare()), _tree(value_compare(key_compare())) { }
 
             explicit map (Compare &comp,
                     const Allocator& alloc = Allocator()) :
-                _tree(tree_type(value_compare(comp), alloc)) { }
+                _val_comp(key_compare()), _tree(tree_type(value_compare(comp), alloc)) { }
 
             template< class InputIt >
             map( InputIt first, InputIt last,
                     const Compare& comp = Compare(),
                     const Allocator& alloc = Allocator(),
                     typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) :
-                _tree(tree_type(value_compare(comp), alloc)) {
+                _val_comp(key_compare()), _tree(tree_type(value_compare(comp), alloc)) {
                 insert(first, last);
             }
 
             map( const map& other ) :
+                _val_comp(key_compare()),
                 _tree(tree_type(other._tree.getComparator(),
                     other._tree.getAllocator())) {
                 *this = other;
@@ -115,14 +117,14 @@ namespace ft {
 
             // Accessor ################################
             T& at( const Key& key ) {
-                node_pointer node = _tree.search(value_type(key, T()));
+                node_pointer node = search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
             }
 
             const T& at(const Key& key) const {
-                node_pointer node = _tree.search(value_type(key, T()));
+                node_pointer node = search(value_type(key, T()));
                 if (node == NULL)
                     throw std::out_of_range("This element doesn't exist in the map");
                 return (node->value.second);
@@ -130,7 +132,7 @@ namespace ft {
 
             T& operator[] ( const Key& key ) {
                 value_type val = value_type(key, T());
-                node_pointer node = _tree.search(val);
+                node_pointer node = search(val);
                 if (node == NULL)
                     return (_tree.insert(val)->value.second);
                 return (node->value.second);
@@ -195,7 +197,7 @@ namespace ft {
             ft::pair<iterator, bool> insert ( const value_type& value ) {
                 ft::pair<iterator, bool> status = ft::pair<iterator, bool>();
                 status.second = false;
-                if (_tree.search(value) == NULL) {
+                if (search(value) == NULL) {
                     status.first = iterator(_tree.insert(value));
                     status.second = true;
                 }
@@ -230,7 +232,7 @@ namespace ft {
             }
 
             size_type erase( const Key& key ) {
-                node_pointer target = _tree.search(value_type(key, T()));
+                node_pointer target = search(value_type(key, T()));
                 if (target == NULL)
                     return (0);
                 _tree.delete_node(target);
@@ -244,21 +246,21 @@ namespace ft {
 
             // Lookup ##################################
             size_type count( const Key& key ) const {
-                node_pointer node = _tree.search(value_type(key, mapped_key()));
+                node_pointer node = search(value_type(key, mapped_key()));
                 if (node == NULL)
                     return (0);
                 return (1);
             }
 
             iterator find( const Key& key ) {
-                node_pointer find_target = _tree.search(value_type(key, mapped_key()));
+                node_pointer find_target = search(value_type(key, mapped_key()));
                 if (find_target == NULL)
                     return (end());
                 return (iterator(find_target));
             }
 
             const_iterator find( const Key& key ) const {
-                node_pointer find_target = _tree.search(value_type(key, mapped_key()));
+                node_pointer find_target = search(value_type(key, mapped_key()));
                 if (find_target == NULL)
                     return (end());
                 return (const_iterator(find_target));
@@ -266,25 +268,25 @@ namespace ft {
 
             iterator upper_bound( const Key& key ) {
                 return (iterator(
-                            _tree.upper_bound(
+                            upper_bound_aux(
                                 value_type(key, mapped_key()))));
             }
 
             const_iterator upper_bound( const Key& key ) const {
                 return (const_iterator(
-                            _tree.upper_bound(
+                            upper_bound_aux(
                                 value_type(key, mapped_key()))));
             }
 
             iterator lower_bound( const Key& key ) {
                 return (iterator(
-                            _tree.lower_bound(
+                            lower_bound_aux(
                                 value_type(key, mapped_key()))));
             }
 
             const_iterator lower_bound( const Key& key ) const {
                 return (const_iterator(
-                            _tree.lower_bound(
+                            lower_bound_aux(
                                 value_type(key, mapped_key()))));
             }
 
@@ -306,6 +308,50 @@ namespace ft {
                 return (value_compare());
             }
             // Observer end ############################
+
+        private:
+            node_pointer search (const value_type &val) const {
+                value_type tmp = val;
+                node_pointer curr = _tree.get_root();
+
+                while (curr != NULL && curr != _tree.end()) {
+                    
+                    if (curr->value.first == val.first)
+                        return (curr);
+                    curr = _val_comp(tmp, curr->value) ? curr -> left : curr -> right;
+                }
+                return (NULL);
+            }
+
+            node_pointer upper_bound_aux (const value_type &val) const {
+                value_type tmp = val;
+                node_pointer curr = _tree.get_root();
+
+                while (curr != NULL && curr != _tree.end()) {
+                    if (curr->value.first > tmp.first)
+                        return (curr);
+                    curr = _val_comp(tmp, curr->value) ? curr -> left : curr -> right;
+                }
+                return (_tree.end());
+            }
+
+            node_pointer lower_bound_aux (const value_type &val) const {
+                value_type tmp = val;
+                node_pointer curr = _tree.get_root();
+                node_pointer candidate = NULL;
+                bool status = false;
+
+                while (curr != NULL && curr != _tree.end()) {
+                    status = curr->value.first >= tmp.first;
+                    if (status)
+                        candidate = curr;
+
+                    curr = _val_comp(tmp, curr->value) ? curr -> left : curr -> right;
+                }
+                if (candidate == NULL)
+                    return (_tree.end());
+                return (candidate);
+            }
     };
     template< class Key, class T, class Compare, class Alloc >
     bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs,
@@ -344,7 +390,7 @@ namespace ft {
     template< class Key, class T, class Compare, class Alloc >
     bool operator>=( const ft::map<Key,T,Compare,Alloc>& lhs,
                     const ft::map<Key,T,Compare,Alloc>& rhs ) {
-        return (lhs > rhs || rhs == lhs);
+        return (!(lhs < rhs));
     }
 
     template< class Key, class T, class Compare, class Alloc >

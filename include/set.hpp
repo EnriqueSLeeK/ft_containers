@@ -15,6 +15,7 @@
 
 #include "RedBlackTree.hpp"
 #include "algorithm.hpp"
+#include "type_traits.hpp"
 #include <memory>
 #include <limits>
 #include <functional>
@@ -38,8 +39,8 @@ template< class Key,
             typedef typename Allocator::const_pointer                       const_pointer;
             typedef ft::node<value_type>                                    node;
             typedef node*                                                   node_pointer;
-            typedef ft::tree_iterator<value_type, node_pointer>             iterator;
-            typedef ft::tree_iterator<const value_type, node_pointer>       const_iterator;
+            typedef ft::tree_iterator<pointer, node_pointer>             iterator;
+            typedef ft::tree_iterator<const_pointer, node_pointer>       const_iterator;
             typedef ft::reverse_iterator<iterator>                          reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
             typedef ft::RedBlackTree<node, value_type, key_compare>         tree_type;
@@ -64,12 +65,18 @@ template< class Key,
                 insert(first, last);
             }
 
-            set( const set& other ) : _tree(other._tree) { }
+            set( const set& other ) :
+                _tree(other._tree.getComparator(),
+                        other._tree.getAllocator()) {
+                *this = other;
+            }
 
             // Constructors end######################################
             // Copy assign ##########################################
             set& operator=( const set& other ) {
                 _tree = other._tree;
+                insert(other.begin(), other.end());
+                return (*this);
             }
             // Copy assign end#######################################
             // Getter ###############################################
@@ -91,7 +98,7 @@ template< class Key,
             }
 
             const_iterator end(void) const {
-                return (iterator(_tree.end()));
+                return (const_iterator(_tree.end()));
             }
 
             reverse_iterator rbegin(void) {
@@ -135,7 +142,7 @@ template< class Key,
             ft::pair<iterator, bool> insert ( const value_type& value ) {
                 ft::pair<iterator, bool> status = ft::pair<iterator, bool>();
                 status.second = false;
-                if (search(value) == NULL) {
+                if (_tree.search(value) == NULL) {
                     status.first = iterator(_tree.insert(value));
                     status.second = true;
                 }
@@ -238,7 +245,8 @@ template< class Key,
     template< class Key, class Compare, class Alloc >
     bool operator==( const ft::set<Key,Compare,Alloc>& lhs,
                     const ft::set<Key,Compare,Alloc>& rhs ) {
-        return (lhs.size() == rhs.size() && ft::equal(lhs, rhs));
+        return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(),
+                                                        rhs.begin(), rhs.end()));
     }
 
 
@@ -271,7 +279,7 @@ template< class Key,
     template< class Key, class Compare, class Alloc >
     bool operator>=( const ft::set<Key,Compare,Alloc>& lhs,
                     const ft::set<Key,Compare,Alloc>& rhs ) {
-        return (lhs > rhs || lhs == rhs);
+        return (!(lhs < rhs));
     }
 
     template< class Key, class Compare, class Alloc >

@@ -17,11 +17,15 @@ SRC := main.cpp
 
 SRC_VECTOR := vector_main.cpp vector_test.cpp
 
+SRC_MAP := map_main.cpp
+
 OBJ := $(SRC:cpp=o)
 OBJ_VEC := $(SRC_VECTOR:cpp=o)
+OBJ_MM := $(SRC_MAP:cpp=o)
 
 DIR_OBJ := ./obj/
 OBJ_M := $(addprefix $(DIR_OBJ), $(OBJ))
+OBJ_MAP := $(addprefix $(DIR_OBJ), $(OBJ_MM))
 OBJ_V := $(addprefix $(DIR_OBJ), $(OBJ_VEC))
 
 VPATH := ./src/ \
@@ -41,10 +45,16 @@ intra_test: $(OBJ_M)
 
 vtest: $(OBJ_V)
 	$(CC) $(CFLAGS) $(OBJ_V) -o vector_test
+	
+mtest: $(OBJ_MAP)
+	$(CC) $(CFLAGS) $(OBJ_MAP) -o map_test
+	
+test: mtest vtest intra_test
 
 re: clean curr_test
 
 clean:
 	rm -rf curr_test
 	rm -rf vector_test
+	rm -rf map_test
 	rm -rf $(DIR_OBJ)

@@ -215,6 +215,10 @@ namespace ft {
 
                 destroy_node(target);
             }
+            
+            node_pointer get_root (void) const {
+                return (_root);
+            }
 
             node_pointer search (const value_type &val) const {
                 value_type tmp = val;
@@ -222,7 +226,7 @@ namespace ft {
 
                 while (curr != NULL && curr != _end) {
                     
-                    if (curr->value.first == val.first)
+                    if (curr->value == val)
                         return (curr);
                     curr = _comp(tmp, curr->value) ? curr -> left : curr -> right;
                 }
@@ -230,11 +234,11 @@ namespace ft {
             }
 
             node_pointer upper_bound (const value_type &val) const {
-                value_type tmp = val;
+               value_type tmp = val;
                 node_pointer curr = _root;
 
                 while (curr != NULL && curr != _end) {
-                    if (curr->value.first > tmp.first)
+                    if (curr->value > tmp)
                         return (curr);
                     curr = _comp(tmp, curr->value) ? curr -> left : curr -> right;
                 }
@@ -248,7 +252,7 @@ namespace ft {
                 bool status = false;
 
                 while (curr != NULL && curr != _end) {
-                    status = curr->value.first >= tmp.first;
+                    status = curr->value >= tmp;
                     if (status)
                         candidate = curr;
 
