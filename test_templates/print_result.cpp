@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector_test.hpp"
+#include <iostream>
 
 void print_check_result (bool res) {
     if (res)

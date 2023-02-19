@@ -13,13 +13,13 @@
 #ifndef STACK_HPP
 # define STACK_HPP
 
-#include "Vector.hpp"
+#include "vector.hpp"
 
 namespace ft {
 
     template< class T, class Container = ft::vector<T> >
         class stack {
-            private:
+            public:
                 typedef Container                           container_type;
                 typedef typename Container::value_type      value_type;
                 typedef typename Container::size_type       size_type;
@@ -28,8 +28,6 @@ namespace ft {
             protected:
                 Container c;
             public:
-                stack(void) { }
-
                 explicit stack( const Container& cont = Container() ) : c(cont) { }
 
                 stack( const stack& other ) : c(other.c) { }
@@ -67,6 +65,31 @@ namespace ft {
                 void pop(void) {
                     c.pop_back();
                 }
+
+            template< class type, class container_type >
+            friend bool operator==( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
+            template< class type, class container_type >
+            friend bool operator!=( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
+            template< class type, class container_type >
+            friend bool operator<=( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
+            template< class type, class container_type >
+            friend bool operator>=( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
+            template< class type, class container_type >
+            friend bool operator>( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
+            template< class type, class container_type >
+            friend bool operator<( const ft::stack<type,container_type>& lhs,
+                                        const ft::stack<type,container_type>& rhs );
+
         };
 
     template< class T, class Container >

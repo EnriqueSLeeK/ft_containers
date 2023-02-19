@@ -14,29 +14,14 @@
 # define VECTOR_TEST_HPP
 
 #include "vector.hpp"
-#include <vector>
 #include "test.hpp"
+#include <vector>
 #include <string>
+#include <ostream>
 #include <iostream>
 #include <stdexcept>
-#include <ostream>
 
 void print_check_result (bool res);
-
-template <class vec_type, class Iter>
-void    show_all(const vec_type &vec, Iter begin, Iter end) {
-    show_status<vec_type>(vec);
-    std::cout << "capacity: " << vec.capacity() << std::endl;
-    show_list<Iter>(begin, end);
-}
-
-template <class vec_type>
-void    show_list(const vec_type &vec, typename vec_type::size_type total_steps, std::string name) {
-    std::cout << name << ": ";
-    for (typename vec_type::size_type i = 0; i < total_steps; i++)
-        std::cout << vec[i] << " ";
-    std::cout << std::endl;
-}
 
 template <typename T>
 bool    size_capacity_test (T expected, T given) {
@@ -52,7 +37,6 @@ bool    vec_equality (vec expected, ft_vec given) {
             return (false);
     return (true);
 }
-
 
 template <class ft_vec_type, class vec_type>
 void    test (const ft_vec_type &vec,
@@ -109,27 +93,16 @@ void push_pop_test (T *k, std::string name) {
     test(ft_vec, vec);
 }
 
-template <class ft_iter, class iter>
-bool check_iterators (ft_iter fbegin, ft_iter fend, iter begin, iter end) {
-    while (fbegin != fend && begin != end) {
-        if ((*fbegin) != *(begin))
-            return (false);
-        ++fbegin;
-        ++begin;
-    }
-    return (fbegin == fend && begin == end);
-}
-
 template <class ft_vec_type, class vec_type, class T>
 void iterator_test ( T *k ) {
     ft_vec_type ft_vec(k, k + 3);
     vec_type vec(k, k + 3);
-    if (check_iterators<typename ft_vec_type::iterator, typename vec_type::iterator>(
+    if (check_interval_normal(
                 ft_vec.begin(),
                 ft_vec.end(),
                 vec.begin(),
                 vec.end())
-        && check_iterators<typename ft_vec_type::reverse_iterator, typename vec_type::reverse_iterator>(
+        && check_interval_normal(
             ft_vec.rbegin(),
             ft_vec.rend(),
             vec.rbegin(),

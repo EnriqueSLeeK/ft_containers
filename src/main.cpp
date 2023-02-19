@@ -1,63 +1,64 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ensebast <ensebast@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 14:48:43 by ensebast          #+#    #+#             */
-/*   Updated: 2023/01/07 00:41:12 by ensebast         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
-#include "stack_test.h"
-#include <string>
-#include <ostream>
 #include <iostream>
 
-int main() {
-    int k[6] = {1, 2, 3, 4, 5 };
+#include <vector>
+#include "vector.hpp"
 
-    std::string p[6] = {std::string("aaaa"),
-        std::string("bbbb"),
-        std::string("cccc"),
-        std::string("dddd"),
-        std::string("eeee"),
-        std::string("ffff")};
+#include <map>
+#include <map.hpp>
 
-    std::cout << "Initialization Test" << std::endl;
-    init_test_m<int>(k, 1, "int");
-    init_test_m<std::string>(p, std::string("test"), "std::string");
-    std::cout << "------------------------" << std::endl;
+#include <set>
+#include "set.hpp"
 
-    std::cout << ">>> Basic push pop test" << std::endl;
-    push_pop_test_m<int>(k, "int");
-    push_pop_test_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
+#include <stack>
+#include "stack.hpp"
 
-    std::cout << ">>> Iterator test" << std::endl;
-    iterator_test_m<int>(k);
-    std::cout << "------------------------" << std::endl;
+#include <string>
 
-    std::cout << ">>> Insertion and erase test" << std::endl;
-    insert_erase_test_m<int>(k, 99999, "int");
-    insert_erase_test_m<std::string>(p, std::string("test"), "std::string");
-    std::cout << "------------------------" << std::endl;
+#include "time.hpp"
 
-    std::cout << ">>> Swap" << std::endl;
-    swap_m<int>(k, "int");
-    swap_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
+void    print_results (double std_time, double ft_time) {
+    std::cout << "Std_time: " << std_time << std::endl;
+    std::cout << "Ft_time: " << ft_time << std::endl;
+    std::cout << "Ratio: ";
+    if (std_time == 0)
+        std::cout << "Std_time is zero, ratio cannot be taken";
+    else 
+        std::cout << ft_time / std_time << " times in relation to the std implmentation";
+    std::cout << std::endl;
+}
 
-    std::cout << ">>> Element access" << std::endl;
-    access_m<int>(k, "int");
-    access_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
+int main(void) {
+    double std_time = 0, ft_time = 0;
 
-    std::cout << ">>> Operands" << std::endl;
-    operator_m<int>(k, "int");
-    operator_m<std::string>(p, "std::string");
-    std::cout << "------------------------" << std::endl;
+    std::cout << "---------- Vector time op ------------------------" << std::endl;
+    std_time = measure_vector_time<std::vector<std::string> >("a");
+    ft_time = measure_vector_time<ft::vector<std::string> >("a");
+    print_results(std_time, ft_time);
 
+    std::cout << std::endl;
+
+    std_time = measure_vector_time<std::vector<int> >(0);
+    ft_time = measure_vector_time<ft::vector<int> >(0);
+    print_results(std_time, ft_time);
+
+    std::cout << std::endl;
+
+    std_time = measure_vector_time<std::vector<char> >(32);
+    ft_time = measure_vector_time<ft::vector<char> >(32);
+    print_results(std_time, ft_time);
+    std::cout << "--------------------------------------------------" << std::endl << std::endl;
+
+    std::cout << "---------- Map time op ---------------------------" << std::endl;
+    print_results(std_time, ft_time);
+    std::cout << "--------------------------------------------------" << std::endl << std::endl;
+
+    std::cout << "---------- Stack time op -------------------------" << std::endl;
+    print_results(std_time, ft_time);
+    std::cout << "--------------------------------------------------" << std::endl << std::endl;
+
+    std::cout << "---------- Set time op ---------------------------" << std::endl;
+    print_results(std_time, ft_time);
+    std::cout << "--------------------------------------------------" << std::endl << std::endl;
     return (0);
 }

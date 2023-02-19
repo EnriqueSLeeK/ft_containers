@@ -269,24 +269,45 @@ namespace ft {
              iterator insert( const_iterator pos, const T& value ) {
                  difference_type i = end().base() - pos.base();
                  pointer position_data = NULL;
+
                  if (_size + 1 > _capacity)
                      resize(_capacity * 2);
+
                  position_data = _data + (_size - i);
                  shift_left(end().base(), i, 0);
+
                  _allocator.construct(position_data, value);
                  ++_size;
+
                  return (iterator(position_data));
              }
 
              iterator insert( const_iterator pos, size_type count, const T& value ) {
+
                  difference_type i = end().base() - pos.base();
                  pointer position_data = NULL;
-                 if (_size + count > _capacity)
-                     resize(_capacity * 2);
+
+                 size_t total_used = _size + count;
+
+                 if (total_used > _capacity) {
+                    size_t new_capacity;
+
+                    if (_capacity == 0)
+                        new_capacity = 1;
+                    else
+                        new_capacity = _capacity * 2;
+
+                    if (new_capacity < total_used)
+                        new_capacity = total_used + 1;
+                    resize(new_capacity);
+                 }
+
                  position_data = _data + (_size - i);
                  shift_left(end().base(), i, count - 1);
+
                  for (size_type i = 0; i < count; i++)
                     _allocator.construct(position_data + i, value);
+
                  _size += count;
                  return (iterator(position_data));
              }
@@ -330,10 +351,13 @@ namespace ft {
              }
 
              void resize( size_type count, value_type value = value_type() ) {
+
                  if (count == 0)
                      count = 1;
+
                  if (count > max_size())
                      throw std::length_error("Max size exceeded");
+
                  pointer tmp = _allocator.allocate(count);
                  for (size_type i = 0; i < count; i++) {
                      if (i < _size) {
@@ -343,12 +367,15 @@ namespace ft {
                      else
                          _allocator.construct(&tmp[i], value);
                  }
+
                  if (_data != NULL)
                     _allocator.deallocate(_data, _capacity);
+
                  _data = tmp;
                  _capacity = count;
                  if (_size > count)
                      _size = count;
+
              }
 
              void swap( vector& other ) {
@@ -374,6 +401,7 @@ namespace ft {
 
              void shift_left (pointer pos, difference_type total_steps, size_type offset) {
                  pointer positionWithOffset = pos + offset;
+
                  if (total_steps > 0) {
                      for (difference_type step = total_steps; step > 0; step--) {
                          _allocator.construct(positionWithOffset, *(pos - 1));
@@ -382,6 +410,7 @@ namespace ft {
                          positionWithOffset--;
                      }
                  }
+
              }
 
              void shift_right (pointer pos, difference_type total_steps, size_type offset) {
