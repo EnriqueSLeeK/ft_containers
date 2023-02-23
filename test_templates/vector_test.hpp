@@ -51,9 +51,8 @@ void    test (const ft_vec_type &vec,
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void init_test (T *k, T val, std::string name) {
+void init_test (T *k, T val) {
 
-    std::cout << "#### Type: " << name << std::endl;
     std::cout << "Value type: ";
     ft_vec_type ft_vec;
     vec_type vec;
@@ -72,12 +71,11 @@ void init_test (T *k, T val, std::string name) {
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void push_pop_test (T *k, std::string name) {
+void push_pop_test (T *k) {
 
     ft_vec_type ft_vec;
     vec_type vec;
 
-    std::cout << "#### Type: " << name << std::endl;
     std::cout << "After push ------" << std::endl;
     for (int i = 0; i < 5; i++) {
         ft_vec.push_back(k[i]);
@@ -113,12 +111,12 @@ void iterator_test ( T *k ) {
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void insert_erase_test (T *k, T val, std::string name) {
-    std::cout << "#### Type: " << name << std::endl;
+void insert_erase_test (T *k, T val) {
     ft_vec_type ft_vec(k, k + 5);
     vec_type vec(k, k + 5);
 
     std::cout << "After insertion -------" << std::endl;
+
     std::cout << "Normal insertion ---: ";
     ft_vec.insert(ft_vec.begin() + 2, val);
     vec.insert(vec.begin() + 2, val);
@@ -127,12 +125,14 @@ void insert_erase_test (T *k, T val, std::string name) {
     ft_vec.insert(ft_vec.end(), val);
     vec.insert(vec.end(), val);
     test(ft_vec, vec);
+
     std::cout << "Array insertion ---: ";
     vec.insert(vec.begin(), 3, val);
     ft_vec.insert(ft_vec.begin(), 3, val);
     vec.insert(vec.begin(), k + 1, k + 3);
     ft_vec.insert(ft_vec.begin(), k + 1, k + 3);
     test(ft_vec, vec);
+
     std::cout << "After erase -------: ";
     ft_vec.erase(ft_vec.begin() + 3);
     vec.erase(vec.begin() + 3);
@@ -142,9 +142,8 @@ void insert_erase_test (T *k, T val, std::string name) {
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void    swap_test (T* k, std::string name) {
+void    swap_test (T* k) {
 
-    std::cout << "### Type: " << name << std::endl;
     vec_type vec_1(k, k + 2);
     vec_type vec_2(k + 3, k + 5);
 
@@ -177,9 +176,8 @@ void value_equality (T val_1, T val_2) {
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void    access_test (T* k, std::string name) {
+void    access_test (T* k) {
 
-    std::cout << "### Type: " << name << std::endl;
     ft_vec_type ft_vec(k, k+5);
     vec_type vec(k, k+5);
 
@@ -204,9 +202,7 @@ void    access_test (T* k, std::string name) {
 }
 
 template <class ft_vec_type, class vec_type, class T>
-void operator_test (T *arr, std::string name) {
-    std::cout << "### Type: " << name << std::endl;
-
+void operator_test (T *arr) {
     ft_vec_type empty_1;
     ft_vec_type empty_2;
     ft_vec_type ft_vec_1(arr, arr + 5);
@@ -250,13 +246,13 @@ void operator_test (T *arr, std::string name) {
 }
 
 template <typename T>
-void init_test_m (T* arr, T val, std::string name) {
-    init_test< ft::vector<T>, std::vector<T>, T > (arr, val, name);
+void init_test_m (T* arr, T val) {
+    init_test< ft::vector<T>, std::vector<T>, T > (arr, val);
 }
 
 template <typename T>
-void push_pop_test_m (T* arr, std::string name) {
-    push_pop_test< ft::vector<T>, std::vector<T>, T >(arr, name);
+void push_pop_test_m (T* arr) {
+    push_pop_test< ft::vector<T>, std::vector<T>, T >(arr);
 }
 
 template <typename T>
@@ -265,22 +261,22 @@ void iterator_test_m (T *arr) {
 }
 
 template <typename T>
-void insert_erase_test_m (T *arr, T val, std::string name) {
-    insert_erase_test< ft::vector<T>, std::vector<T>, T > (arr, val, name);
+void insert_erase_test_m (T *arr, T val) {
+    insert_erase_test< ft::vector<T>, std::vector<T>, T > (arr, val);
 }
 
 template <typename T>
-void swap_m (T *arr, std::string name) {
-    swap_test< ft::vector<T>, std::vector<T>, T > (arr, name);
+void swap_m (T *arr) {
+    swap_test< ft::vector<T>, std::vector<T>, T > (arr);
 }
 
 template <typename T>
-void access_m (T *arr, std::string name) {
-    access_test< ft::vector<T>, std::vector<T>, T > (arr, name);
+void access_m (T *arr) {
+    access_test< ft::vector<T>, std::vector<T>, T > (arr);
 }
 
 template <typename T>
-void operator_m (T *arr, std::string name) {
-    operator_test< ft::vector<T>, std::vector<T>, T > (arr, name);
+void operator_m (T *arr) {
+    operator_test< ft::vector<T>, std::vector<T>, T > (arr);
 }
 #endif

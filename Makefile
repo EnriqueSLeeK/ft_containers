@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC := c++
-CFLAGS := -Wall -Wextra -Werror -std=c++98 -Iinclude -Itest_templates
+CFLAGS := -g -Wall -Wextra -Werror -std=c++98 -Iinclude -Itest_templates
 
 SRC := main.cpp
 

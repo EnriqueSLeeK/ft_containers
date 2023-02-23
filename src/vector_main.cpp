@@ -25,13 +25,13 @@ int main() {
         std::string("ffff")};
 
     std::cout << "Initialization Test" << std::endl;
-    init_test_m<int>(k, 1, "int");
-    init_test_m<std::string>(p, std::string("test"), "std::string");
+    init_test_m<int>(k, 1);
+    init_test_m<std::string>(p, std::string("test"));
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Basic push pop test" << std::endl;
-    push_pop_test_m<int>(k, "int");
-    push_pop_test_m<std::string>(p, "std::string");
+    push_pop_test_m<int>(k);
+    push_pop_test_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Iterator test" << std::endl;
@@ -39,23 +39,23 @@ int main() {
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Insertion and erase test" << std::endl;
-    insert_erase_test_m<int>(k, 99999, "int");
-    insert_erase_test_m<std::string>(p, std::string("test"), "std::string");
+    insert_erase_test_m<int>(k, 99999);
+    insert_erase_test_m<std::string>(p, std::string("test"));
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Swap" << std::endl;
-    swap_m<int>(k, "int");
-    swap_m<std::string>(p, "std::string");
+    swap_m<int>(k);
+    swap_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Element access" << std::endl;
-    access_m<int>(k, "int");
-    access_m<std::string>(p, "std::string");
+    access_m<int>(k);
+    access_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Operands" << std::endl;
-    operator_m<int>(k, "int");
-    operator_m<std::string>(p, "std::string");
+    operator_m<int>(k);
+    operator_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
 
     return (0);

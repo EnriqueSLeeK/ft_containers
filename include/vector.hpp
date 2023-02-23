@@ -79,7 +79,7 @@ namespace ft {
             vector( InputIt first,
                     InputIt last,
                     const Allocator& alloc = Allocator(),
-                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) :
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type* = 0 ) :
                 _size(last - first),
                 _capacity(last - first),
                 _allocator(alloc),
@@ -130,7 +130,7 @@ namespace ft {
 
             template< class InputIt >
             void assign( InputIt first, InputIt last,
-                            typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0) {
+                            typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type* = 0) {
                 for (size_type offset = 0; (first + offset) < last; offset++)
                     _allocator.construct(_data + offset, *(first + offset));
             }
@@ -251,9 +251,24 @@ namespace ft {
 
              // Member functions#########
              iterator erase( iterator first, iterator last ) {
-                 for (iterator curr = first; curr < last; curr++)
-                     erase(curr);
-                 return (last);
+                bool is_end = (last == end());
+
+                for (iterator curr = first; curr < last; curr++)
+                    _allocator.destroy(curr.base());
+
+                if (!is_end) {
+
+                    iterator end_list = end();
+                    int i = 0;
+                    for (iterator curr = last; curr < end_list; curr++) {
+                        _allocator.construct(first.base() + i, *curr);
+                        _allocator.destroy(curr.base());
+                        i++;
+                    }
+
+                }
+                _size -= last - first;
+                return (last);
              }
 
              iterator erase( iterator pos ) {
@@ -314,10 +329,10 @@ namespace ft {
 
              template< class InputIt >
              iterator insert( const_iterator pos, InputIt first, InputIt last,
-                     typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) {
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type* = 0 ) {
                  difference_type i = end().base() - pos.base();
                  pointer position_data = NULL;
-                 if (_size + (first - last) > _capacity)
+                 if (_size + (last - first) > _capacity)
                      resize(_capacity * 2);
                  position_data = _data + (_size - i);
                  shift_left(end().base(), i, (last - first) - 1);

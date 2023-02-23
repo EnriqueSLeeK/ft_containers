@@ -84,7 +84,7 @@ namespace ft {
             map( InputIt first, InputIt last,
                     const Compare& comp = Compare(),
                     const Allocator& alloc = Allocator(),
-                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) :
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type* = 0 ) :
                 _val_comp(key_compare()), _tree(tree_type(value_compare(comp), alloc)) {
                 insert(first, last);
             }
@@ -211,7 +211,7 @@ namespace ft {
 
             template< class InputIt >
             void insert ( InputIt first, InputIt last ,
-                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type = 0 ) {
+                    typename ft::enable_if< !ft::is_integral<InputIt>::value, InputIt>::type* = 0 ) {
                 for (InputIt curr = first;
                         curr != last;
                         curr++) {
