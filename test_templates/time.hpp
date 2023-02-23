@@ -17,13 +17,13 @@ double measure_vector_time (data_type data) {
 
     vec_type vector_container;
 
-    vector_container.insert(vector_container.begin(), 5000, data);
+    vector_container.insert(vector_container.begin(), 50000, data);
     vector_container.clear();
 
-    vector_container.insert(vector_container.begin(), 5000, data);
+    vector_container.insert(vector_container.begin(), 50000, data);
     vector_container.erase(vector_container.begin(), vector_container.end() - 100);
     vector_container.erase(vector_container.begin(), vector_container.begin() + 50);
-    vector_container.insert(vector_container.begin(), 5000, data);
+    vector_container.insert(vector_container.begin(), 50000, data);
     vector_container.insert(vector_container.begin(),
                                 vector_container.begin(),
                                 vector_container.begin() + 10);
