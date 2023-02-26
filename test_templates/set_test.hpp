@@ -49,11 +49,6 @@ template <typename std_set_type, typename ft_set_type,
           typename data_type >
 void init_set_test (data_type *data) {
 
-    std::cout << "Copy constructor and contructor test" << std::endl;
-    std::cout << "Every test will call the copy constructor" <<std::endl;
-    std::cout << "Every test will use the normal iterator and the reverse iterator" <<std::endl;
-
-
     std::cout << "Default" << std::endl;
     std_set_type std_set;
     ft_set_type ft_set;

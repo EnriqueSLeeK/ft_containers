@@ -203,46 +203,54 @@ void    access_test (T* k) {
 
 template <class ft_vec_type, class vec_type, class T>
 void operator_test (T *arr) {
-    ft_vec_type empty_1;
-    ft_vec_type empty_2;
+    
+    vec_type std_empty_1;
+    vec_type std_empty_2;
+    vec_type std_vec_1(arr, arr + 5);
+    vec_type std_vec_2(arr, arr + 2);
+    vec_type std_vec_3(arr, arr + 2);
+    vec_type std_vec_4(arr + 1, arr + 3);
+    
+    ft_vec_type ft_empty_1;
+    ft_vec_type ft_empty_2;
     ft_vec_type ft_vec_1(arr, arr + 5);
     ft_vec_type ft_vec_2(arr, arr + 2);
     ft_vec_type ft_vec_3(arr, arr + 2);
     ft_vec_type ft_vec_4(arr + 1, arr + 3);
 
     std::cout << "Operator ==" << std::endl;
-    print_check_result(empty_1 == empty_2);
-    print_check_result(!(ft_vec_1 == ft_vec_2));
-    print_check_result(ft_vec_3 == ft_vec_2);
+    print_check_result((ft_empty_1 == ft_empty_2) == (std_empty_1 == std_empty_2));
+    print_check_result((ft_vec_1 == ft_vec_2) == (std_vec_1 == std_vec_2));
+    print_check_result((ft_vec_3 == ft_vec_2) == (std_vec_3 == std_vec_2));
     std::cout << "Operator !=" << std::endl;
-    print_check_result(ft_vec_1 != ft_vec_2);
-    print_check_result(!(ft_vec_3 != ft_vec_2));
+    print_check_result((ft_vec_1 != ft_vec_2) == (std_vec_1 != std_vec_2));
+    print_check_result((ft_vec_3 != ft_vec_2) == (std_vec_3 != std_vec_2));
     std::cout << "Operator <" << std::endl;
-    print_check_result(!(empty_1 < empty_2));
-    print_check_result(!(ft_vec_1 < ft_vec_2));
-    print_check_result(ft_vec_2 < ft_vec_1);
-    print_check_result(!(ft_vec_4 < ft_vec_2));
-    print_check_result(ft_vec_2 < ft_vec_4);
-    print_check_result(!(ft_vec_2 < ft_vec_3));
+    print_check_result((ft_empty_1 < ft_empty_2) == (std_empty_1 < std_empty_2));
+    print_check_result((ft_vec_1 < ft_vec_2) == (std_vec_1 < std_vec_2));
+    print_check_result((ft_vec_2 < ft_vec_1) == (std_vec_2 < std_vec_1));
+    print_check_result((ft_vec_4 < ft_vec_2) == (std_vec_4 < std_vec_2));
+    print_check_result((ft_vec_2 < ft_vec_4) == (std_vec_2 < std_vec_4));
+    print_check_result((ft_vec_2 < ft_vec_3) == (std_vec_2 < std_vec_3));
     std::cout << "Operator >" << std::endl;
-    print_check_result(!(empty_1 < empty_2));
-    print_check_result(ft_vec_1 > ft_vec_2);
-    print_check_result(!(ft_vec_2 > ft_vec_1));
-    print_check_result(ft_vec_4 > ft_vec_2);
-    print_check_result(!(ft_vec_2 > ft_vec_4));
-    print_check_result(!(ft_vec_2 > ft_vec_3));
+    print_check_result((ft_empty_1 < ft_empty_2) == (std_empty_1 < std_empty_2));
+    print_check_result((ft_vec_1 > ft_vec_2) == (std_vec_1 > std_vec_2));
+    print_check_result((ft_vec_2 > ft_vec_1) == (std_vec_2 > std_vec_1));
+    print_check_result((ft_vec_4 > ft_vec_2) == (std_vec_4 > std_vec_2));
+    print_check_result((ft_vec_2 > ft_vec_4) == (std_vec_2 > std_vec_4));
+    print_check_result((ft_vec_2 > ft_vec_3) == (std_vec_2 > std_vec_3));
     std::cout << "Operator <=" << std::endl;
-    print_check_result(!(ft_vec_1 <= ft_vec_2));
-    print_check_result(ft_vec_2 <= ft_vec_1);
-    print_check_result(!(ft_vec_4 <= ft_vec_2));
-    print_check_result(ft_vec_2 <= ft_vec_4);
-    print_check_result(ft_vec_2 <= ft_vec_3);
+    print_check_result((ft_vec_1 <= ft_vec_2) == (std_vec_1 <= std_vec_2));
+    print_check_result((ft_vec_2 <= ft_vec_1) == (std_vec_2 <= std_vec_1));
+    print_check_result((ft_vec_4 <= ft_vec_2) == (std_vec_4 <= std_vec_2));
+    print_check_result((ft_vec_2 <= ft_vec_4) == (std_vec_2 <= std_vec_4));
+    print_check_result((ft_vec_2 <= ft_vec_3) == (std_vec_2 <= std_vec_3));
     std::cout << "Operator >=" << std::endl;
-    print_check_result(ft_vec_1 >= ft_vec_2);
-    print_check_result(!(ft_vec_2 >= ft_vec_1));
-    print_check_result(ft_vec_4 >= ft_vec_2);
-    print_check_result(!(ft_vec_2 >= ft_vec_4));
-    print_check_result(ft_vec_2 >= ft_vec_3);
+    print_check_result((ft_vec_1 >= ft_vec_2) == (std_vec_1 >= std_vec_2));
+    print_check_result((ft_vec_2 >= ft_vec_1) == (std_vec_2 >= std_vec_1));
+    print_check_result((ft_vec_4 >= ft_vec_2) == (std_vec_4 >= std_vec_2));
+    print_check_result((ft_vec_2 >= ft_vec_4) == (std_vec_2 >= std_vec_4));
+    print_check_result((ft_vec_2 >= ft_vec_3) == (std_vec_2 >= std_vec_3));
 }
 
 template <typename T>

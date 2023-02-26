@@ -19,7 +19,7 @@
 #include "set.hpp"
 #include <set>
 
-int main() {
+void set_test() {
     int data[6] = {1, 2, 3, 4, 5, 6};
 
     std::string data_string[6] = {std::string("aaaa"),
@@ -59,6 +59,4 @@ int main() {
     operator_test_b < std::set<int>,
                       ft::set<int> > (data);
     std::cout << "------------------------" << std::endl;
-
-    return (0);
 }

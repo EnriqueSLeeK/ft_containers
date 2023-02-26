@@ -72,6 +72,7 @@ template< class Key,
             }
 
             // Constructors end######################################
+            ~set () { }
             // Copy assign ##########################################
             set& operator=( const set& other ) {
                 _tree = other._tree;

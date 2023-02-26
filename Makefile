@@ -13,77 +13,49 @@
 CC := c++
 CFLAGS := -g -Wall -Wextra -Werror -std=c++98 -Iinclude -Itest_templates
 
-SRC := main.cpp
-
-SRC_VECTOR := vector_main.cpp print_result.cpp
-
-SRC_STACK := stack_main.cpp print_result.cpp
-
-SRC_SET := set_main.cpp
-SRC_MAP := map_main.cpp
+SRC_FUNC_TEST := functionality_test_main.cpp \
+					print_result.cpp \
+					map_main.cpp \
+					vector_main.cpp \
+					stack_main.cpp \
+					set_main.cpp
+					
+SRC_TIME_TEST := performance_test_main.cpp
 
 SRC_INTRA := intra_main.cpp
 
-OBJ := $(SRC:cpp=o)
-OBJ_VEC := $(SRC_VECTOR:cpp=o)
-OBJ_MM := $(SRC_MAP:cpp=o)
-OBJ_SETT := $(SRC_SET:cpp=o)
-OBJ_STACK := $(SRC_STACK:cpp=o)
+OBJ_FUNC := $(SRC_FUNC_TEST:cpp=o)
 OBJ_INTRA := $(SRC_INTRA:cpp=o)
 
 DIR_OBJ := ./obj/
-OBJ_M := $(addprefix $(DIR_OBJ), $(OBJ))
-OBJ_MAP := $(addprefix $(DIR_OBJ), $(OBJ_MM))
-OBJ_SET := $(addprefix $(DIR_OBJ), $(OBJ_SETT))
-
-OBJ_V := $(addprefix $(DIR_OBJ), $(OBJ_VEC))
-OBJ_STACKK := $(addprefix $(DIR_OBJ), $(OBJ_STACK))
+OBJ_FUNCTIONALITY := $(addprefix $(DIR_OBJ), $(OBJ_FUNC))
+OBJ_TIME := $(addprefix $(DIR_OBJ), $(SRC_TIME_TEST:cpp=o))
 
 OBJ_INTRAA := $(addprefix $(DIR_OBJ), $(OBJ_INTRA))
 
 VPATH := ./src/ \
 		 ./test_templates/
 
-all: $(OBJ_M) curr_test
+all: $(OBJ_FUNCTIONALITY) functionality_test time_test
 
 $(DIR_OBJ)%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $^ -o $@
 
-curr_test: $(OBJ_M)
-	@mkdir -p test
-	$(CC) $(CFLAGS) $(OBJ_M) -o curr_test
+functionality_test: $(OBJ_FUNCTIONALITY)
+	$(CC) $(CFLAGS) $(OBJ_FUNCTIONALITY) -o functionality_test
+
+time_test: $(OBJ_TIME)
+	$(CC) $(CFLAGS) $(OBJ_TIME) -o time_test
 
 intra: $(OBJ_INTRAA)
-	@mkdir -p test
 	$(CC) $(CFLAGS) $(OBJ_INTRAA) -o intra_test
 
-vtest: $(OBJ_V)
-	@mkdir -p test
-	$(CC) $(CFLAGS) $(OBJ_V) -o vector_test
-	
-mtest: $(OBJ_MAP)
-	@mkdir -p test
-	$(CC) $(CFLAGS) $(OBJ_MAP) -o map_test
+test: functionality_test time_test intra
 
-stest: $(OBJ_SET)
-	@mkdir -p test
-	$(CC) $(CFLAGS) $(OBJ_SET) -o set_test
-
-sktest: $(OBJ_STACKK)
-	@mkdir -p test
-	$(CC) $(CFLAGS) $(OBJ_STACKK) -o stack_test
-	
-test: mtest vtest stest intra_test sktest
-
-re: clean curr_test
+re: clean functionality_test time_test
 
 clean:
-	rm -f stack_test
-	rm -f curr_test
-	rm -f vector_test
-	rm -f intra_test
-	rm -f map_test
-	rm -f set_test
-	rm -rf test
+	rm -f time_test
+	rm -f functionality_test
 	rm -rf $(DIR_OBJ)

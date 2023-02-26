@@ -24,9 +24,8 @@
 void print_check_result (bool res);
 
 template <class ft_stack_type, class stack_type, class T>
-void init_test (T *k, T val, std::string name) {
+void init_test (T *k, T val) {
 
-    std::cout << "#### Type: " << name << std::endl;
     std::cout << "Default constructor" << std::endl;
     stack_type stack;
     ft_stack_type ft_stack;
@@ -57,69 +56,78 @@ void init_test (T *k, T val, std::string name) {
 
 
 template <class ft_stack_type, class stack_type, class T>
-void operator_test (T *arr, std::string name) {
-    std::cout << "### Type: " << name << std::endl;
+void operator_test (T *arr) {
+    stack_type std_empty_1;
+    stack_type std_empty_2;
+    stack_type std_stack_1;
+    stack_type std_stack_2;
+    stack_type std_stack_3;
+    stack_type std_stack_4;
 
-    ft_stack_type empty_1;
-    ft_stack_type empty_2;
-
+    ft_stack_type ft_empty_1;
+    ft_stack_type ft_empty_2;
     ft_stack_type ft_stack_1;
     ft_stack_type ft_stack_2;
     ft_stack_type ft_stack_3;
     ft_stack_type ft_stack_4;
     for (int i = 0; i < 6; i++) {
         if (i < 2) {
+            std_stack_2.push(arr[i]);
+            std_stack_3.push(arr[i]);
             ft_stack_2.push(arr[i]);
             ft_stack_3.push(arr[i]);
         }
-        if (i > 0 && i < 4)
+        if (i > 0 && i < 4) {
+            std_stack_4.push(arr[i]);
             ft_stack_4.push(arr[i]);
+        }
+        std_stack_1.push(arr[i]);
         ft_stack_1.push(arr[i]);
     }
 
     std::cout << "Operator ==" << std::endl;
-    print_check_result(empty_1 == empty_2);
-    print_check_result(!(ft_stack_1 == ft_stack_2));
-    print_check_result(ft_stack_3 == ft_stack_2);
+    print_check_result((ft_empty_1 == ft_empty_2) == (std_empty_1 == std_empty_2));
+    print_check_result((ft_stack_1 == ft_stack_2) == (std_stack_1 == std_stack_2));
+    print_check_result((ft_stack_3 == ft_stack_2) == (std_stack_3 == std_stack_2));
     std::cout << "Operator !=" << std::endl;
-    print_check_result(ft_stack_1 != ft_stack_2);
-    print_check_result(!(ft_stack_3 != ft_stack_2));
+    print_check_result((ft_stack_1 != ft_stack_2) == (std_stack_1 != std_stack_2));
+    print_check_result((ft_stack_3 != ft_stack_2) == (std_stack_3 != std_stack_2));
     std::cout << "Operator <" << std::endl;
-    print_check_result(!(empty_1 < empty_2));
-    print_check_result(!(ft_stack_1 < ft_stack_2));
-    print_check_result(ft_stack_2 < ft_stack_1);
-    print_check_result(!(ft_stack_4 < ft_stack_2));
-    print_check_result(ft_stack_2 < ft_stack_4);
-    print_check_result(!(ft_stack_2 < ft_stack_3));
+    print_check_result((ft_empty_1 < ft_empty_2) == (std_empty_1 < std_empty_2));
+    print_check_result((ft_stack_1 < ft_stack_2) == (std_stack_1 < std_stack_2));
+    print_check_result((ft_stack_2 < ft_stack_1) == (std_stack_2 < std_stack_1));
+    print_check_result((ft_stack_4 < ft_stack_2) == (std_stack_4 < std_stack_2));
+    print_check_result((ft_stack_2 < ft_stack_4) == (std_stack_2 < std_stack_4));
+    print_check_result((ft_stack_2 < ft_stack_3) == (std_stack_2 < std_stack_3));
     std::cout << "Operator >" << std::endl;
-    print_check_result(!(empty_1 < empty_2));
-    print_check_result(ft_stack_1 > ft_stack_2);
-    print_check_result(!(ft_stack_2 > ft_stack_1));
-    print_check_result(ft_stack_4 > ft_stack_2);
-    print_check_result(!(ft_stack_2 > ft_stack_4));
-    print_check_result(!(ft_stack_2 > ft_stack_3));
+    print_check_result((ft_empty_1 < ft_empty_2) == (std_empty_1 < std_empty_2));
+    print_check_result((ft_stack_1 > ft_stack_2) == (std_stack_1 > std_stack_2));
+    print_check_result((ft_stack_2 > ft_stack_1) == (std_stack_2 > std_stack_1));
+    print_check_result((ft_stack_4 > ft_stack_2) == (std_stack_4 > std_stack_2));
+    print_check_result((ft_stack_2 > ft_stack_4) == (std_stack_2 > std_stack_4));
+    print_check_result((ft_stack_2 > ft_stack_3) == (std_stack_2 > std_stack_3));
     std::cout << "Operator <=" << std::endl;
-    print_check_result(!(ft_stack_1 <= ft_stack_2));
-    print_check_result(ft_stack_2 <= ft_stack_1);
-    print_check_result(!(ft_stack_4 <= ft_stack_2));
-    print_check_result(ft_stack_2 <= ft_stack_4);
-    print_check_result(ft_stack_2 <= ft_stack_3);
+    print_check_result((ft_stack_1 <= ft_stack_2) == (std_stack_1 <= std_stack_2));
+    print_check_result((ft_stack_2 <= ft_stack_1) == (std_stack_2 <= std_stack_1));
+    print_check_result((ft_stack_4 <= ft_stack_2) == (std_stack_4 <= std_stack_2));
+    print_check_result((ft_stack_2 <= ft_stack_4) == (std_stack_2 <= std_stack_4));
+    print_check_result((ft_stack_2 <= ft_stack_3) == (std_stack_2 <= std_stack_3));
     std::cout << "Operator >=" << std::endl;
-    print_check_result(ft_stack_1 >= ft_stack_2);
-    print_check_result(!(ft_stack_2 >= ft_stack_1));
-    print_check_result(ft_stack_4 >= ft_stack_2);
-    print_check_result(!(ft_stack_2 >= ft_stack_4));
-    print_check_result(ft_stack_2 >= ft_stack_3);
+    print_check_result((ft_stack_1 >= ft_stack_2) == (std_stack_1 >= std_stack_2));
+    print_check_result((ft_stack_2 >= ft_stack_1) == (std_stack_2 >= std_stack_1));
+    print_check_result((ft_stack_4 >= ft_stack_2) == (std_stack_4 >= std_stack_2));
+    print_check_result((ft_stack_2 >= ft_stack_4) == (std_stack_2 >= std_stack_4));
+    print_check_result((ft_stack_2 >= ft_stack_3) == (std_stack_2 >= std_stack_3));
 }
 
 template <typename T>
-void init_test_m (T* arr, T val, std::string name) {
-    init_test< ft::stack<T>, std::stack<T>, T > (arr, val, name);
+void init_test_m (T* arr, T val) {
+    init_test< ft::stack<T>, std::stack<T>, T > (arr, val);
 }
 
 template <typename T>
-void operator_m (T *arr, std::string name) {
-    operator_test< ft::stack<T>, std::stack<T>, T > (arr, name);
+void operator_m (T *arr) {
+    operator_test< ft::stack<T>, std::stack<T>, T > (arr);
 }
 
 #endif

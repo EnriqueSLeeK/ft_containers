@@ -168,14 +168,8 @@ namespace ft {
                 bool y_original_color = y->color;
                 bool flag = false;
 
-                // Check if the right child has the end node
-                if (target->right == _end) {
-                    if (target->left != NULL)
-                        _end->parent = target->left;
-                    else
-                        _end->parent = target->parent;
+                if (target->right == _end)
                     flag = true;
-                }
                 
                 if (target->left == NULL) {
                     x = target->right;
@@ -204,17 +198,22 @@ namespace ft {
                     y->left->parent = y;
                     y->color = target->color;
                 }
-                
-                if (y_original_color == BLACK) {
-                    deleteFix(x);
-                }
-
-                if (flag && _end->parent != NULL)
-                    _end->parent->right = _end;
 
                 _size--;
 
                 destroy_node(target);
+                
+                if (y_original_color == BLACK)
+                    deleteFix(x);
+
+                if (!flag)
+                    return ;
+                
+                pointer max = maximum(_root->right);
+                if (max) {
+                   max->right = _end; 
+                   _end->parent = max;
+                }
             }
             
             node_pointer get_root (void) const {
@@ -305,7 +304,7 @@ namespace ft {
 
             // Node destruction
             void            destroy_node(node_pointer node_obj) {
-                if (node_obj -> end_node)
+                if (node_obj == NULL || node_obj == _end)
                     return ;
                 _allocator.destroy(node_obj);
                 _allocator.deallocate(node_obj, 1);
@@ -464,21 +463,20 @@ namespace ft {
                                 w->color = RED;
                                 x = x->parent;
                             }
-                            else if (w->right && w->right->color == BLACK) {
-                                w->left->color = BLACK;
-                                w->color = RED;
-                                rotation_right(w);
-                                w = x->parent->right;
+                            else {
+                                if (w->right && w->right->color == BLACK) {
+                                    w->left->color = BLACK;
+                                    w->color = RED;
+                                    rotation_right(w);
+                                    w = x->parent->right;
+                                }
+                                w->color = x->parent->color;
+                                x->parent->color = BLACK;
+                                w->right->color = BLACK;
+                                rotation_left(x->parent);
+                                x = _root;
                             }
                         }
-
-                        if (w != 0)
-                            w->color = x->parent->color;
-                        x->parent->color = BLACK;
-                        if (w != 0 && w->right)
-                            w->right->color = BLACK;
-                        rotation_left(x->parent);
-                        x = _root;
                     }
 
                     else {
@@ -492,29 +490,28 @@ namespace ft {
                                 w = x->parent->left;
                             }
 
-                            if (w->left->color == BLACK && w->right->color == BLACK) {
+                            if ((w->left && w->left->color == BLACK)
+                                && (w->right && w->right->color == BLACK)) {
                                 w->color = RED;
                                 x = x->parent;
                             }
-                            else if (w->left->color == BLACK) {
-                                w->right->color = BLACK;
-                                w->color = RED;
-                                rotation_left(w);
-                                w = x->parent->left;
+                            else {
+                                if (w->left && w->left->color == BLACK) {
+                                    w->right->color = BLACK;
+                                    w->color = RED;
+                                    rotation_left(w);
+                                    w = x->parent->left;
+                                }
+                                w->color = x->parent->color;
+                                x->parent->color = BLACK;
+                                w->left->color = BLACK;
+                                rotation_right(x->parent);
+                                x = _root;
                             }
                         }
-
-                        if (w != 0)
-                            w->color = x->parent->color;
-                        x->parent->color = BLACK;
-                        if (w != 0 && w->right)
-                            w->left->color = BLACK;
-                        rotation_right(x->parent);
-                        x = _root;
                     }
-
-                    x->color = BLACK;
                 }
+                x->color = BLACK;
             }
             
             void show_map (pointer curr) {

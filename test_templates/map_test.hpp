@@ -49,11 +49,6 @@ template <typename std_map_type, typename ft_map_type,
          typename std_data, typename ft_data >
 void init_map_test (ft_data *fdata, std_data *data) {
 
-    std::cout << "Copy constructor and contructor test" << std::endl;
-    std::cout << "Every test will call the copy constructor" <<std::endl;
-    std::cout << "Every test will use the normal iterator and the reverse iterator" <<std::endl;
-
-
     std::cout << "Default" << std::endl;
     std_map_type std_map;
     ft_map_type ft_map;

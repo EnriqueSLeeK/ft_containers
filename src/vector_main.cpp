@@ -15,7 +15,7 @@
 #include <ostream>
 #include <iostream>
 
-int main() {
+void vector_test (){
     int k[6] = {1, 10, 12, 13, 14, 15};
     std::string p[6] = {std::string("aaaa"),
         std::string("bbbb"),
@@ -57,6 +57,4 @@ int main() {
     operator_m<int>(k);
     operator_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
-
-    return (0);
 }

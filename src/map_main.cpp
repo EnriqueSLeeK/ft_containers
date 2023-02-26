@@ -20,7 +20,7 @@
 #include "map.hpp"
 #include <map>
 
-int main() {
+void map_test() {
     int k[6] = {1, 2, 3, 4, 5, 6};
     std::string p[6] = {std::string("aaaa"),
         std::string("bbbb"),
@@ -78,6 +78,4 @@ int main() {
                       ft::map<int, std::string> >
                         (ft_pair_list, pair_list);
     std::cout << "------------------------" << std::endl;
-
-    return (0);
 }

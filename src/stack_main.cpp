@@ -15,7 +15,7 @@
 #include <ostream>
 #include <iostream>
 
-int main() {
+void stack_test() {
     int k[6] = {1, 2, 3, 4, 5 };
 
     std::string p[6] = {std::string("aaaa"),
@@ -26,13 +26,12 @@ int main() {
         std::string("ffff")};
 
     std::cout << "Initialization Test" << std::endl;
-    init_test_m<int>(k, 1, "int");
-    init_test_m<std::string>(p, std::string("test"), "std::string");
+    init_test_m<int>(k, 1);
+    init_test_m<std::string>(p, std::string("test"));
     std::cout << "------------------------" << std::endl;
 
     std::cout << ">>> Operands" << std::endl;
-    operator_m<int>(k, "int");
-    operator_m<std::string>(p, "std::string");
+    operator_m<int>(k);
+    operator_m<std::string>(p);
     std::cout << "------------------------" << std::endl;
-    return (0);
 }
