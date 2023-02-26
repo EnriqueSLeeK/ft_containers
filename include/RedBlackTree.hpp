@@ -199,12 +199,12 @@ namespace ft {
                     y->color = target->color;
                 }
 
+                if (y_original_color == BLACK)
+                    deleteFix(x);
+
                 _size--;
 
                 destroy_node(target);
-                
-                if (y_original_color == BLACK)
-                    deleteFix(x);
 
                 if (!flag)
                     return ;
@@ -450,7 +450,6 @@ namespace ft {
                         && x->color == BLACK) {
                     if (x == x->parent->left) {
                         w = x->parent->right;
-
                         if (w != 0) {
                             if (w->color == RED) {
                                 w->color = BLACK;
@@ -481,7 +480,6 @@ namespace ft {
 
                     else {
                         w = x->parent->left;
-
                         if (w != 0) {
                             if (w->color == RED) {
                                 w->color = BLACK;
@@ -511,7 +509,9 @@ namespace ft {
                         }
                     }
                 }
-                x->color = BLACK;
+                if (x != _end
+                    && x != NULL)
+                    x->color = BLACK;
             }
             
             void show_map (pointer curr) {
