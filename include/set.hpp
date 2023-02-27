@@ -18,7 +18,6 @@
 #include "type_traits.hpp"
 #include <memory>
 #include <limits>
-#include <functional>
 
 namespace ft {
 template< class Key,
@@ -66,8 +65,8 @@ template< class Key,
             }
 
             set( const set& other ) :
-                _tree(other._tree.getComparator(),
-                        other._tree.getAllocator()) {
+                _tree(other._tree.get_comparator(),
+                        other._tree.get_allocator()) {
                 *this = other;
             }
 
@@ -82,7 +81,7 @@ template< class Key,
             // Copy assign end#######################################
             // Getter ###############################################
             allocator_type get_allocator(void) const {
-                return (_tree.getAllocator());
+                return (_tree.get_allocator());
             }
             // Getter end ###########################################
 
@@ -142,10 +141,14 @@ template< class Key,
 
             ft::pair<iterator, bool> insert ( const value_type& value ) {
                 ft::pair<iterator, bool> status = ft::pair<iterator, bool>();
-                status.second = false;
-                if (_tree.search(value) == NULL) {
+                node_pointer item = _tree.search(value);
+                if (item == NULL) {
                     status.first = iterator(_tree.insert(value));
                     status.second = true;
+                }
+                else {
+                    status.first = iterator(item);
+                    status.second = false;
                 }
                 return (status);
             }
@@ -235,7 +238,7 @@ template< class Key,
             // Lookup end #############################
             //  Observers #############################
             key_compare key_comp(void) const {
-                return (_tree.getComparator());
+                return (_tree.get_comparator());
             }
 
             ft::set<Key, Compare, Allocator>::value_compare value_comp(void) const {

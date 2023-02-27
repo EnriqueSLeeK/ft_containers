@@ -16,7 +16,6 @@
 #include <cstddef>
 #include <memory>
 #include <iostream>
-#include <algorithm>
 #include "utility.hpp"
 #include "tree_iterator.hpp"
 #include "reverse_iterator.hpp"
@@ -112,11 +111,11 @@ namespace ft {
                 return (*this);
             }
 
-            allocator_type getAllocator(void) const {
+            allocator_type get_allocator(void) const {
                 return (_allocator);
             }
 
-            compare_type getComparator(void) const {
+            compare_type get_comparator(void) const {
                 return (_comp);
             }
 
@@ -287,11 +286,11 @@ namespace ft {
 
             // Swapping each other
             void swap (RedBlackTree &other) {
-                std::swap(_allocator, other._allocator);
-                std::swap(_comp, other._comp);
-                std::swap(_root, other._root);
-                std::swap(_size, other._size);
-                std::swap(_end, other._end);
+                swap_aux(_allocator, other._allocator);
+                swap_aux(_comp, other._comp);
+                swap_aux(_root, other._root);
+                swap_aux(_size, other._size);
+                swap_aux(_end, other._end);
             }
 
         private:
@@ -520,8 +519,14 @@ namespace ft {
                 show_map(curr->right);
                 show_map(curr->left);
             }
+            
+            template <typename T>
+            void swap_aux (T &lhs, T &rhs) {
+                T tmp = lhs;
+                lhs = rhs;
+                rhs = tmp;
+            }
     };
-
 }
 
 #endif

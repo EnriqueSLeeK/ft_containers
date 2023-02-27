@@ -10,6 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
+NAME := intra_test
+
 CC := c++
 CFLAGS := -g -Wall -Wextra -Werror -std=c++98 -Iinclude -Itest_templates
 
@@ -48,14 +50,17 @@ functionality_test: $(OBJ_FUNCTIONALITY)
 time_test: $(OBJ_TIME)
 	$(CC) $(CFLAGS) $(OBJ_TIME) -o time_test
 
-intra: $(OBJ_INTRAA)
-	$(CC) $(CFLAGS) $(OBJ_INTRAA) -o intra_test
+$(NAME): $(OBJ_INTRAA)
+	$(CC) $(CFLAGS) $(OBJ_INTRAA) -o $(NAME)
 
 test: functionality_test time_test intra
 
 re: clean functionality_test time_test
 
 clean:
+	rm -rf $(DIR_OBJ)
+
+fclean: clean
+	rm -f intra_test
 	rm -f time_test
 	rm -f functionality_test
-	rm -rf $(DIR_OBJ)

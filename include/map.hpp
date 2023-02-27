@@ -14,7 +14,6 @@
 # define MAP_HPP
 
 #include <memory>
-#include <functional>
 #include <limits>
 #include <iterator>
 #include "algorithm.hpp"
@@ -91,8 +90,8 @@ namespace ft {
 
             map( const map& other ) :
                 _val_comp(key_compare()),
-                _tree(tree_type(other._tree.getComparator(),
-                    other._tree.getAllocator())) {
+                _tree(tree_type(other._tree.get_comparator(),
+                    other._tree.get_allocator())) {
                 *this = other;
             }
             //  Constructor end#########################
@@ -110,8 +109,8 @@ namespace ft {
             // Destructor end ##########################
             
             // Getter ##################################
-            allocator_type getAllocator(void) const {
-                return (_tree.getAllocator());
+            allocator_type get_allocator(void) const {
+                return (_tree.get_allocator());
             }
             // Getter end ##############################
 
@@ -196,10 +195,14 @@ namespace ft {
 
             ft::pair<iterator, bool> insert ( const value_type& value ) {
                 ft::pair<iterator, bool> status = ft::pair<iterator, bool>();
-                status.second = false;
-                if (search(value) == NULL) {
+                node_pointer item =  search(value);
+                if (item == NULL) {
                     status.first = iterator(_tree.insert(value));
                     status.second = true;
+                }
+                else {
+                    status.first = iterator(item);
+                    status.second = false;
                 }
                 return (status);
             }
@@ -301,7 +304,7 @@ namespace ft {
 
             // Observer ################################
             key_compare key_comp(void) const {
-                return (_tree.getComparator());
+                return (_tree.get_comparator());
             }
 
             ft::map<Key, T, Compare, Allocator>::value_compare value_comp(void) const {
