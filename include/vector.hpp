@@ -101,7 +101,7 @@ namespace ft {
             // Construtors end######
 
             // Get allocator #####
-            allocator_type  getAllocator(void) {
+            allocator_type  get_allocator(void) {
                 return (_allocator);
             }
             // Get allocator end##
