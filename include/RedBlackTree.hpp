@@ -43,11 +43,12 @@ namespace ft {
                                         right(NULL),
                                         parent(NULL),
                                         color(RED) {}
-        node (void) : end_node(true),
-                        left(NULL),
-                        right(NULL),
-                        parent(NULL),
-                        color(BLACK) {}
+        
+        node (const bool status) :  end_node(status),
+                                    left(NULL),
+                                    right(NULL),
+                                    parent(NULL),
+                                    color(BLACK) {}
     };
 
     template < class n_type,
@@ -87,12 +88,12 @@ namespace ft {
                 _allocator(alloc),
                 _comp(comp),
                 _root(NULL),
-                _end(new node_type()),
+                _end(sentinel_create()),
                 _size(0) { }
 
             ~RedBlackTree (void) {
                 clean_up(_root);
-                delete _end;
+                _allocator.deallocate(_end, 1);
             }
             
             // Copy constructor
@@ -100,7 +101,7 @@ namespace ft {
                 _allocator(tree._allocator),
                 _comp(tree._comp),
                 _root(NULL),
-                _end(new node_type()),
+                _end(sentinel_create()),
                 _size(0) {
                 *this = tree;
             }
@@ -298,6 +299,12 @@ namespace ft {
             node_pointer    create_node(const value_type &val) {
                 node_pointer new_node = _allocator.allocate(1);
                 _allocator.construct(new_node, val);
+                return (new_node);
+            }
+            
+            node_pointer    sentinel_create(void) {
+                node_pointer new_node = _allocator.allocate(1);
+                _allocator.construct(new_node, true);
                 return (new_node);
             }
 
