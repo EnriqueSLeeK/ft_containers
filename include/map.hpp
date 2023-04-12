@@ -32,7 +32,7 @@ namespace ft {
         class map {
         public:
             typedef Key                                                     key_type;
-            typedef T                                                       mapped_key;
+            typedef T                                                       mapped_type;
             typedef ft::pair<const Key, T>                                  value_type;
             typedef std::size_t                                             size_type;
             typedef std::ptrdiff_t                                          difference_type;
